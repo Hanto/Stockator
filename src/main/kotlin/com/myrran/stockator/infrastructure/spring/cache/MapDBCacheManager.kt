@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit
 class MapDBCacheManager(
 
     private val mapDB: DB,
+    private val properties: MapDBCacheProperties
 
 ): CacheManager {
 
@@ -23,13 +24,13 @@ class MapDBCacheManager(
     override fun getCache(name: String): Cache =
         caches.computeIfAbsent(name) { cacheName -> createMapDBCache(cacheName, mapDB) }
 
-    private fun createMapDBCache(name: String, db: DB): Cache {
-        val map: HTreeMap<String, Any> = db.hashMap(name)
+    private fun createMapDBCache(name: String, mapDB: DB): Cache {
+        val map: HTreeMap<String, Any> = mapDB.hashMap(name)
             .keySerializer(Serializer.STRING)
             .valueSerializer(Serializer.JAVA)
-            .expireAfterCreate(30, TimeUnit.DAYS) // TTL after creation
-            .expireAfterUpdate(30, TimeUnit.DAYS) // TTL after update
-            .expireAfterGet(30, TimeUnit.DAYS) // Extend TTL on access
+            .expireAfterCreate(properties.ttlInHours, TimeUnit.DAYS) // TTL after creation
+            .expireAfterUpdate(properties.ttlInHours, TimeUnit.DAYS) // TTL after update
+            //.expireAfterGet(30, TimeUnit.DAYS) // Extend TTL on access
             .createOrOpen()
 
         return MapDBCache(name, map)

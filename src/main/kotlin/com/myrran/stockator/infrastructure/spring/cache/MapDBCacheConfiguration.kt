@@ -36,5 +36,5 @@ class MapDBCacheConfiguration(
 
     @Bean("mapDBCacheManager")
     fun mapDBcacheManager(mapDB: DB): CacheManager =
-        MapDBCacheManager(mapDB)
+        MapDBCacheManager(mapDB, properties)
 }

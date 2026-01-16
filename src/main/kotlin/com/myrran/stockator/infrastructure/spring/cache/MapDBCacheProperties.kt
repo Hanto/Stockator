@@ -6,10 +6,12 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class MapDBCacheProperties(
 
-    @Value("\${datasource.mapdb.filepath}")
+    @Value("\${cache.mapdb.filepath}")
     val filePath: String,
-    @Value("\${datasource.mapdb.enabletransactions}")
+    @Value("\${cache.mapdb.enabletransactions}")
     val enableTransactions: Boolean,
-    @Value("\${datasource.mapdb.cleanuponstart}")
+    @Value("\${cache.mapdb.cleanuponstart}")
     val cleanupOnStart: Boolean,
+    @Value("\${cache.mapdb.ttlinhours}")
+    val ttlInHours: Long
 )
