@@ -1,10 +1,10 @@
-package com.myrran.stockator.infrastructure.spring.configuration
+package com.myrran.stockator.infrastructure.spring.cache
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class MapDBProperties(
+class MapDBCacheProperties(
 
     @Value("\${datasource.mapdb.filepath}")
     val filePath: String,
@@ -12,6 +12,4 @@ class MapDBProperties(
     val enableTransactions: Boolean,
     @Value("\${datasource.mapdb.cleanuponstart}")
     val cleanupOnStart: Boolean,
-    @Value("\${datasource.mapdb.backuponshutdown}")
-    val backupOnShutdown: Boolean,
 )

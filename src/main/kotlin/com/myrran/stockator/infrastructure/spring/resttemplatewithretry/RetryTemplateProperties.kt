@@ -1,10 +1,10 @@
-package com.myrran.stockator.infrastructure.spring.configuration
+package com.myrran.stockator.infrastructure.spring.resttemplatewithretry
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class RetryProperties(
+class RetryTemplateProperties(
 
     @Value($$"${externalapi.retry.default.maxattemps}")
     val maxAttemps: Int,

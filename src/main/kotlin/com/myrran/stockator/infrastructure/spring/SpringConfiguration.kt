@@ -1,7 +1,8 @@
-package com.myrran.stockator.infrastructure.spring.configuration
+package com.myrran.stockator.infrastructure.spring
 
-import com.myrran.stockator.infrastructure.spring.RestTemplateWithRetry
-import com.myrran.stockator.infrastructure.spring.RetryTemplateBuilder
+import com.myrran.stockator.infrastructure.spring.resttemplatewithretry.RestTemplateWithRetry
+import com.myrran.stockator.infrastructure.spring.resttemplatewithretry.RetryTemplateBuilder
+import com.myrran.stockator.infrastructure.spring.resttemplatewithretry.RetryTemplateProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.restclient.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
@@ -14,14 +15,14 @@ class SpringConfiguration {
 
     @Bean
     fun defaultRetyTemplateForRest(
-        retryProperties: RetryProperties
+        retryTemplateProperties: RetryTemplateProperties
     ): RetryTemplate =
 
         RetryTemplateBuilder(
-            maxAttemps = retryProperties.maxAttemps,
-            httpStatusCodeRetry = retryProperties.httpCodesToRetry,
-            backOffInterval = retryProperties.backOffInterval,
-            backOffMultiplier = retryProperties.backOffMultiplier
+            maxAttemps = retryTemplateProperties.maxAttemps,
+            httpStatusCodeRetry = retryTemplateProperties.httpCodesToRetry,
+            backOffInterval = retryTemplateProperties.backOffInterval,
+            backOffMultiplier = retryTemplateProperties.backOffMultiplier
         ).build()
 
 

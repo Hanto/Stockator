@@ -1,4 +1,4 @@
-package com.myrran.stockator.infrastructure.spring
+package com.myrran.stockator.infrastructure.spring.resttemplatewithretry
 
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpEntity
@@ -69,7 +69,7 @@ class RestTemplateWithRetry(
     override fun <T : Any> postForEntity(url: String, request: Any?, responseType: Class<T>, vararg uriVariables: Any?): ResponseEntity<T> =
         retryTemplate.execute<ResponseEntity<T>, RestClientException> { restTemplate.postForEntity(url, request, responseType, *uriVariables) }
 
-    override fun <T : Any> postForEntity(url: String, request: Any?, responseType: Class<T>, uriVariables: Map<String, out Any?>): ResponseEntity<T> =
+    override fun <T : Any> postForEntity(url: String, request: Any?, responseType: Class<T>, uriVariables: Map<String, Any?>): ResponseEntity<T> =
         retryTemplate.execute<ResponseEntity<T>, RestClientException> { restTemplate.postForEntity(url, request, responseType, uriVariables) }
 
     override fun <T : Any> postForEntity(url: URI, request: Any?, responseType: Class<T>): ResponseEntity<T> =

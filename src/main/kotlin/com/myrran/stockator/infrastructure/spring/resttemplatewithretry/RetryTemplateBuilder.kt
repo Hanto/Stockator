@@ -1,4 +1,4 @@
-package com.myrran.stockator.infrastructure.spring
+package com.myrran.stockator.infrastructure.spring.resttemplatewithretry
 
 import org.springframework.classify.Classifier
 import org.springframework.http.HttpStatusCode

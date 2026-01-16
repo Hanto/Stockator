@@ -1,17 +1,18 @@
-package com.myrran.stockator.infrastructure.spring.configuration
+package com.myrran.stockator.infrastructure.spring.cache
 
-import com.myrran.stockator.infrastructure.repositories.alphavantagemonthlyseries.AVTickerMonthlySeriesEntity
 import org.mapdb.DB
 import org.mapdb.DBMaker
+import org.springframework.cache.CacheManager
+import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import java.io.File
-import java.util.concurrent.ConcurrentMap
 
+@EnableCaching
 @Configuration
-class MapDBConfiguration(
+class MapDBCacheConfiguration(
 
-    val properties: MapDBProperties
+    val properties: MapDBCacheProperties
 )
 {
     @Bean(destroyMethod = "close")
@@ -33,10 +34,7 @@ class MapDBConfiguration(
         return dbMaker.make()
     }
 
-    @Bean
-    fun tickerMonthlySerieMap(db: DB): ConcurrentMap<String, AVTickerMonthlySeriesEntity> =
-        db.hashMap("tickerMonthlySerieMap")
-            .keySerializer(org.mapdb.Serializer.STRING)
-            .valueSerializer(org.mapdb.Serializer.JAVA)
-            .createOrOpen() as ConcurrentMap<String, AVTickerMonthlySeriesEntity>
+    @Bean("mapDBCacheManager")
+    fun mapDBcacheManager(mapDB: DB): CacheManager =
+        MapDBCacheManager(mapDB)
 }

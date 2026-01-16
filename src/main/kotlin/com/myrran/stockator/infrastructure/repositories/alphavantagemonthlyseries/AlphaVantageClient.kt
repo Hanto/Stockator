@@ -1,7 +1,6 @@
 package com.myrran.stockator.infrastructure.repositories.alphavantagemonthlyseries
 
 import com.myrran.stockator.domain.Ticker
-import com.myrran.stockator.infrastructure.spring.configuration.AlphaVantageProperties
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 import org.springframework.web.client.RestOperations
