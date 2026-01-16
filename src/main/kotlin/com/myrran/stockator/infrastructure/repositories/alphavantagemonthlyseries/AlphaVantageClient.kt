@@ -25,11 +25,13 @@ class AlphaVantageClient(
 
             log.info("findBy(ticker={})", ticker)
 
-            val url = """${alphaVantageProperties.url}
+            val url = """
+                ${alphaVantageProperties.url}
                 ?function=${alphaVantageProperties.monthlyFunction}
                 &symbol=${ticker.symbol}
                 &apikey=${alphaVantageProperties.apiKey}
-                """.trimIndent().replace("\n", "")
+            
+            """.trimIndent().replace("\n", "")
 
             restTemplate.getForObject<AVTickerMonthlySeriesEntity>(url)
         }
@@ -37,7 +39,7 @@ class AlphaVantageClient(
 
             when (e.cause) {
 
-                is HttpMessageNotReadableException, is HttpMessageConversionException -> null
+                is HttpMessageNotReadableException, is HttpMessageConversionException -> null.also { log.error("No readable for {}", ticker) }
                 else -> throw e
             }
         }

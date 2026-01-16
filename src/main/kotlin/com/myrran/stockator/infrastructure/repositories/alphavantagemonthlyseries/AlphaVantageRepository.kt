@@ -5,13 +5,12 @@ import com.myrran.stockator.domain.TickerMonthlySeries
 import org.springframework.stereotype.Repository
 
 @Repository
-open class AlphaVantageRepository(
+class AlphaVantageRepository(
 
     private val alphaVantageClient: AlphaVantageClient,
     private val adapter: AlphaVantageAdapter
 ) {
-
-    open fun findBy(ticker: Ticker): TickerMonthlySeries? =
+    fun findBy(ticker: Ticker): TickerMonthlySeries? =
 
         alphaVantageClient.findBy(ticker)
             ?.let { adapter.toDomain(it) }
