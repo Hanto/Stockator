@@ -14,6 +14,6 @@ open class AlphaVantageRepository(
     open fun findBy(ticker: Ticker): TickerMonthlySeries? =
 
         alphaVantageClient.findBy(ticker)
-            ?.let { adapter.from(it) }
+            ?.let { adapter.toDomain(it) }
 
 }

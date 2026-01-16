@@ -1,8 +1,8 @@
 package com.myrran.stockator.infrastructure.spring
 
-import com.myrran.stockator.infrastructure.spring.resttemplatewithretry.RestTemplateWithRetry
-import com.myrran.stockator.infrastructure.spring.resttemplatewithretry.RetryTemplateBuilder
-import com.myrran.stockator.infrastructure.spring.resttemplatewithretry.RetryTemplateProperties
+import com.myrran.stockator.infrastructure.resttemplatewithretry.RestTemplateWithRetry
+import com.myrran.stockator.infrastructure.resttemplatewithretry.RetryTemplateBuilder
+import com.myrran.stockator.infrastructure.resttemplatewithretry.RetryTemplateProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.restclient.RestTemplateBuilder
 import org.springframework.context.annotation.Bean

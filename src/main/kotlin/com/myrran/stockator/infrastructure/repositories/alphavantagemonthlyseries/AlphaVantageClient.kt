@@ -3,7 +3,10 @@ package com.myrran.stockator.infrastructure.repositories.alphavantagemonthlyseri
 import com.myrran.stockator.domain.Ticker
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.http.converter.HttpMessageConversionException
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.stereotype.Repository
+import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestOperations
 import org.springframework.web.client.getForObject
 
@@ -17,18 +20,25 @@ class AlphaVantageClient(
     private val log = LoggerFactory.getLogger(this.javaClass)
 
     @Cacheable(cacheManager = "mapDBCacheManager", cacheNames = ["tickerMonthlySeries"], key = "#ticker.symbol")
-    fun findBy(ticker: Ticker): AVTickerMonthlySeriesEntity? {
+    fun findBy(ticker: Ticker): AVTickerMonthlySeriesEntity? =
+        try {
 
-        log.info("findBy(ticker={})", ticker)
+            log.info("findBy(ticker={})", ticker)
 
-        val url = """
-            ${alphaVantageProperties.url}
-            ?function=${alphaVantageProperties.monthlyFunction}
-            &symbol=${ticker.symbol}
-            &apikey=${alphaVantageProperties.apiKey}
-        
-        """.trimIndent().replace("\n", "")
+            val url = """${alphaVantageProperties.url}
+                ?function=${alphaVantageProperties.monthlyFunction}
+                &symbol=${ticker.symbol}
+                &apikey=${alphaVantageProperties.apiKey}
+                """.trimIndent().replace("\n", "")
 
-        return restTemplate.getForObject<AVTickerMonthlySeriesEntity>(url)
-    }
+            restTemplate.getForObject<AVTickerMonthlySeriesEntity>(url)
+        }
+        catch (e: RestClientException) {
+
+            when (e.cause) {
+
+                is HttpMessageNotReadableException, is HttpMessageConversionException -> null
+                else -> throw e
+            }
+        }
 }

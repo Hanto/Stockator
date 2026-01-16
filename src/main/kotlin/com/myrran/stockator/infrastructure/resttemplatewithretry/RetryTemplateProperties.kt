@@ -1,4 +1,4 @@
-package com.myrran.stockator.infrastructure.spring.resttemplatewithretry
+package com.myrran.stockator.infrastructure.resttemplatewithretry
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration

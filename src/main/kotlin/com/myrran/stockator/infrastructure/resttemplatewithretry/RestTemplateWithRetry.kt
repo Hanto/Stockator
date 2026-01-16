@@ -1,4 +1,4 @@
-package com.myrran.stockator.infrastructure.spring.resttemplatewithretry
+package com.myrran.stockator.infrastructure.resttemplatewithretry
 
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpEntity

@@ -13,9 +13,11 @@ data class AVTickerMonthlySeriesEntity(
     val metadata: AVMetadataEntity,
     @JsonProperty("Monthly Time Series")
     val monthlyTimeSeries: Map<String, AVMonthlyDataEntity>
+
 ): Serializable
 
 data class AVMetadataEntity(
+
     @JsonProperty(value = "1. Information")
     val information: String,
     @JsonProperty(value = "2. Symbol")
@@ -24,9 +26,11 @@ data class AVMetadataEntity(
     val lastRefreshed: String,
     @JsonProperty(value = "4. Time Zone")
     val timeZone: String
+
 ): Serializable
 
 data class AVMonthlyDataEntity(
+
     @JsonProperty(value = "1. open")
     val open: String,
     @JsonProperty(value = "2. high")
@@ -37,4 +41,5 @@ data class AVMonthlyDataEntity(
     val close: String,
     @JsonProperty(value = "5. volume")
     val volume: String
+
 ): Serializable

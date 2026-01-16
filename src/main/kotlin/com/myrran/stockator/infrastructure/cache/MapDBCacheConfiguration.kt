@@ -1,4 +1,4 @@
-package com.myrran.stockator.infrastructure.spring.cache
+package com.myrran.stockator.infrastructure.cache
 
 import org.mapdb.DB
 import org.mapdb.DBMaker

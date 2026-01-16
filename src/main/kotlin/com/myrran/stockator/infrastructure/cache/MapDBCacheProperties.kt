@@ -1,4 +1,4 @@
-package com.myrran.stockator.infrastructure.spring.cache
+package com.myrran.stockator.infrastructure.cache
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
