@@ -12,7 +12,7 @@ data class AVTickerMonthlySeriesEntity(
     @JsonProperty("Meta Data")
     val metadata: AVMetadataEntity,
     @JsonProperty("Monthly Time Series")
-    val monthlyTimeSeries: Map<String, AVMonthlySerieEntity>
+    val monthlyTimeSeries: Map<String, AVMonthlyDataEntity>
 ): Serializable
 
 data class AVMetadataEntity(
@@ -26,7 +26,7 @@ data class AVMetadataEntity(
     val timeZone: String
 ): Serializable
 
-data class AVMonthlySerieEntity(
+data class AVMonthlyDataEntity(
     @JsonProperty(value = "1. open")
     val open: String,
     @JsonProperty(value = "2. high")
