@@ -28,8 +28,8 @@ class MapDBCacheManager(
         val map: HTreeMap<String, Any> = mapDB.hashMap(name)
             .keySerializer(Serializer.STRING)
             .valueSerializer(Serializer.JAVA)
-            .expireAfterCreate(properties.ttlInHours, TimeUnit.DAYS) // TTL after creation
-            .expireAfterUpdate(properties.ttlInHours, TimeUnit.DAYS) // TTL after update
+            .expireAfterCreate(properties.ttlInHours, TimeUnit.HOURS) // TTL after creation
+            .expireAfterUpdate(properties.ttlInHours, TimeUnit.HOURS) // TTL after update
             //.expireAfterGet(30, TimeUnit.DAYS) // Extend TTL on access
             .createOrOpen()
 

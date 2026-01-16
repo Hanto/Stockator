@@ -13,7 +13,8 @@ import java.time.Month
 @RestController
 class TickerMonthlySeriesResource(
     val repository: AlphaVantageRepository,
-    val service: TickerAnalyzerService
+    val service: TickerAnalyzerService,
+    val properties: TickerProperties
 ) {
 
     @GetMapping("/api/analyze/{ticker}/{month}")
@@ -42,10 +43,10 @@ class TickerMonthlySeriesResource(
     @GetMapping("/api/analyze/{month}")
     fun analyze(
         @PathVariable month: Month,
-        @RequestParam tickers: List<String>
+        @RequestParam tickers: List<String>?
     ): List<TickerDTO> {
 
-        val tickersDomain = tickers.map { Ticker(it) }
+        val tickersDomain = (tickers ?: properties.defaultTickers).map { Ticker(it) }
 
         return service.analyzeTickers(tickersDomain, month)
             .map { TickerDTO(it.symbol) }
