@@ -21,7 +21,7 @@ class TickerAnalyzerService(
 
         repository.findBy(tickerId, historyTimeRange)
 
-    fun goodTickersFor(tickerIds: List<TickerId>, historyTimeRange: TimeRange, month: Month, rules: TickerHistoryRules): List<TickerId> =
+    fun goodTickersFor(tickerIds: List<TickerId>, historyTimeRange: TimeRange, rules: TickerHistoryRules, month: Month): List<TickerId> =
 
         tickerIds
             .map { repository.findByAsync(it, historyTimeRange) }

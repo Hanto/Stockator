@@ -49,7 +49,7 @@ class TickerAnalyzerResource(
         val timeRange = properties.defaultTimeRange()
         val rules = properties.defaultRulesForAGoodMonth()
 
-        return service.goodTickersFor(tickers, timeRange, month, rules)
+        return service.goodTickersFor(tickers, timeRange, rules, month)
             .map { TickerDTO(it.symbol) }
     }
 
