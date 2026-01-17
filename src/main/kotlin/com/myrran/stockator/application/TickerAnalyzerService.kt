@@ -12,20 +12,19 @@ class TickerAnalyzerService(
     val repository: AlphaVantageRepository
 ) {
 
-    fun analyzeTickers(tickers: List<Ticker>, month: Month): List<Ticker> =
+    fun filterOutWithBadMonths(tickers: List<Ticker>, month: Month): List<Ticker> =
 
         tickers
             .map { repository.findByAsync(it) }
             .mapNotNull { it.get() }
-            .filter { analyzeSeries(it, month) }
+            .filter { hasAGoodMonthOverTheYears(it, month) }
             .map { it.ticker }
 
+    fun hadAGoodMonth(ticker: Ticker, month: Month): Boolean =
 
-    fun analyzeTicker(ticker: Ticker, month: Month): Boolean =
+        repository.findBy(ticker)?.let { hasAGoodMonthOverTheYears(it, month) } ?: false
 
-        repository.findBy(ticker)?.let { analyzeSeries(it, month) } ?: false
-
-    private fun analyzeSeries(series: TickerMonthlySeries, month: Month): Boolean {
+    private fun hasAGoodMonthOverTheYears(series: TickerMonthlySeries, month: Month): Boolean {
 
         val average = series.averageIncreaseOf(month)
         val median = series.medianIncreaseOf(month)

@@ -21,6 +21,7 @@ class AlphaVantageClient(
 
     @Cacheable(cacheManager = "mapDBCacheManager", cacheNames = ["tickerMonthlySeries"], key = "#ticker.symbol")
     fun findBy(ticker: Ticker): AVTickerMonthlySeriesEntity? =
+
         try {
 
             log.info("findBy(ticker={})", ticker)
@@ -39,7 +40,7 @@ class AlphaVantageClient(
 
             when (e.cause) {
 
-                is HttpMessageNotReadableException, is HttpMessageConversionException -> null.also { log.error("No readable for {}", ticker) }
+                is HttpMessageNotReadableException, is HttpMessageConversionException -> null.also { log.warn("No readable for {}", ticker) }
                 else -> throw e
             }
         }

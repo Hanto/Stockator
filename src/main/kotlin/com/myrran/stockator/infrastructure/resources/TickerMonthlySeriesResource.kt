@@ -25,7 +25,7 @@ class TickerMonthlySeriesResource(
 
         val tickerDomain = Ticker(ticker)
         val result = repository.findBy(tickerDomain)
-        val buyStock = service.analyzeTicker(tickerDomain, month)
+        val buyStock = service.hadAGoodMonth(tickerDomain, month)
 
         println(result?.firstDate())
         println(result?.lastDate())
@@ -48,7 +48,7 @@ class TickerMonthlySeriesResource(
 
         val tickersDomain = (tickers ?: properties.defaultTickers).map { Ticker(it) }
 
-        return service.analyzeTickers(tickersDomain, month)
+        return service.filterOutWithBadMonths(tickersDomain, month)
             .map { TickerDTO(it.symbol) }
     }
 }

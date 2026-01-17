@@ -18,6 +18,6 @@ class ThreadPoolsConfiguration {
         ThreadPoolTaskExecutor().apply {
             corePoolSize = 10
             setWaitForTasksToCompleteOnShutdown(true)
-            setThreadNamePrefix("AVPool-")
+            setThreadNamePrefix("API-AV-")
         }
 }
