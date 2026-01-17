@@ -24,17 +24,16 @@ class AlphaVantageClient(
 
         try {
 
-            log.info("findBy(ticker={})", ticker)
-
             val url = """
                 ${alphaVantageProperties.url}
                 ?function=${alphaVantageProperties.monthlyFunction}
-                &apikey=${alphaVantageProperties.apiKey}
                 &symbol={symbol}
+                &apikey=${alphaVantageProperties.apiKey}
             
             """.trimIndent().replace("\n", "")
 
             restTemplate.getForObject<AVTickerMonthlySeriesEntity>(url, ticker.symbol)
+                .also { log.info("Fetched monthly series for {}", ticker) }
         }
         catch (e: RestClientException) {
 

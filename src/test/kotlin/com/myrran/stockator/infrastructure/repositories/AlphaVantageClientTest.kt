@@ -15,15 +15,14 @@ class AlphaVantageClientTest {
             restTemplate = RestTemplate(),
             alphaVantageProperties = AlphaVantageProperties(
                 url = "https://www.alphavantage.co/query",
-                apiKey = "Y80WH1XGB1BBESEA",
+                apiKey = "demo",
                 monthlyFunction = "TIME_SERIES_MONTHLY"
             )
         )
 
-        val ticker = Ticker("AAPL")
+        val ticker = Ticker("IBM")
         val result = client.findBy(ticker)
 
         println(result)
     }
-
 }

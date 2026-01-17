@@ -1,0 +1,21 @@
+package com.myrran.stockator.infrastructure.resources
+
+import java.time.LocalDate
+import java.time.Month
+
+data class TickerMonthlySeriesDTO(
+    val ticker: String,
+    val firstDate: LocalDate,
+    val lastDate: LocalDate,
+    val averageIncreasesByMonth: Map<Month, Double>,
+    val medianIncreasesByMonth: Map<Month, Double>,
+    val numberOfNegativeIncreasesByMonth: Map<Month, Int>,
+    val monthlyData: List<MonthlyDataDTO>,
+)
+
+data class MonthlyDataDTO(
+    val openingPrice: Double,
+    val closingPrice: Double,
+    val closingDay: LocalDate,
+    val increase: Double?
+)

@@ -3,6 +3,7 @@ package com.myrran.stockator.infrastructure.cache
 import org.mapdb.DB
 import org.mapdb.HTreeMap
 import org.mapdb.Serializer
+import org.slf4j.LoggerFactory
 import org.springframework.cache.Cache
 import org.springframework.cache.CacheManager
 import java.util.concurrent.Callable
@@ -42,6 +43,8 @@ class MapDBCacheManager(
         private val map: HTreeMap<String, Any>
 
     ) : Cache {
+
+        private val log = LoggerFactory.getLogger(this.javaClass)
 
         override fun getName(): String = name
 

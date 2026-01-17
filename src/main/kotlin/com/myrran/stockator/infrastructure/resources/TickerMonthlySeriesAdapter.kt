@@ -1,0 +1,36 @@
+package com.myrran.stockator.infrastructure.resources
+
+import com.myrran.stockator.domain.Percentage
+import com.myrran.stockator.domain.PercentageI
+import com.myrran.stockator.domain.PercentageNaN
+import com.myrran.stockator.domain.TickerMonthlySeries
+import org.springframework.stereotype.Component
+import java.time.Month
+
+@Component
+class TickerMonthlySeriesAdapter {
+
+    fun fromDomain(domain: TickerMonthlySeries): TickerMonthlySeriesDTO =
+        TickerMonthlySeriesDTO(
+            ticker = domain.ticker.symbol,
+            firstDate = domain.firstDate(),
+            lastDate = domain.lastDate(),
+            averageIncreasesByMonth = Month.entries.associateWith { domain.averageIncreaseOf(it).value },
+            medianIncreasesByMonth = Month.entries.associateWith { domain.medianIncreaseOf(it).value },
+            numberOfNegativeIncreasesByMonth = Month.entries.associateWith { domain.numberOfNegativeIncreasesOn(it) },
+            monthlyData = domain.monthlyData.map {
+                MonthlyDataDTO(
+                    openingPrice = it.openingPrice.amount,
+                    closingPrice = it.closingPrice.amount,
+                    closingDay = it.closingDay,
+                    increase = it.increase.toDouble()
+                )
+            }
+        )
+
+    fun PercentageI.toDouble(): Double? =
+        when (this) {
+            is Percentage -> this.value
+            is PercentageNaN -> null
+        }
+}

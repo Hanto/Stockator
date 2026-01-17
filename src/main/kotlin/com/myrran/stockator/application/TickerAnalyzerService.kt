@@ -12,6 +12,10 @@ class TickerAnalyzerService(
     val repository: AlphaVantageRepository
 ) {
 
+    fun getMonthlySeries(ticker: Ticker): TickerMonthlySeries? =
+
+        repository.findBy(ticker)
+
     fun filterOutWithBadMonths(tickers: List<Ticker>, month: Month): List<Ticker> =
 
         tickers
@@ -30,6 +34,6 @@ class TickerAnalyzerService(
         val median = series.medianIncreaseOf(month)
         val badMonths = series.numberOfNegativeIncreasesOn(month)
 
-        return average > Percentage(4.0) && median > (average * 0.70) && badMonths <= 2
+        return average > Percentage(3.0) && median > (average * 0.70) && badMonths <= 4
     }
 }

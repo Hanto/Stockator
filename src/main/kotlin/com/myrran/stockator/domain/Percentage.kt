@@ -2,10 +2,11 @@ package com.myrran.stockator.domain
 
 import org.apache.commons.math3.stat.descriptive.rank.Median
 
+sealed interface PercentageI
 
 data class Percentage(
     val value: Double
-)
+): PercentageI
 {
     operator fun compareTo(other: Percentage): Int =
         value.compareTo(other.value)
@@ -14,9 +15,10 @@ data class Percentage(
         Percentage(value * number.toDouble())
 }
 
-fun Collection<Percentage>.average(): Percentage =
-    Percentage(this.map { it.value }.average())
+data object PercentageNaN: PercentageI
 
-fun Collection<Percentage>.median(): Percentage =
-    Percentage(Median().evaluate(this.map { it.value }.toDoubleArray()) )
+fun Collection<PercentageI>.average(): Percentage =
+    Percentage(this.filterIsInstance<Percentage>().map { it.value }.average())
 
+fun Collection<PercentageI>.median(): Percentage =
+    Percentage(Median().evaluate(this.filterIsInstance<Percentage>().map { it.value }.toDoubleArray()) )

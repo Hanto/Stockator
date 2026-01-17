@@ -7,5 +7,5 @@ class MonthlyData(
     val closingPrice: Money,
     val closingDay: LocalDate
 ) {
-    val increase: Percentage = closingPrice / openingPrice
+    val increase: PercentageI = closingPrice / openingPrice
 }
