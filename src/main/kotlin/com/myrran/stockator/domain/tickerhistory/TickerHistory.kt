@@ -1,6 +1,7 @@
 package com.myrran.stockator.domain.tickerhistory
 
 import com.myrran.stockator.domain.misc.Increase
+import com.myrran.stockator.domain.rules.TickerHistoryRules
 import java.time.LocalDate
 import java.time.Month
 
@@ -22,4 +23,10 @@ data class TickerHistory(
 
     fun numberOfNegativeIncreasesOn(month: Month): Int =
         history.numberOfNegativeIncreasesOn(month)
+
+    fun satisfiesRulesThatMonth(rules: TickerHistoryRules, month: Month): Boolean =
+        rules.satisfiesTheRules(this, month)
+
+    fun satisfiesRulesAnyMonth(rules: TickerHistoryRules): Boolean =
+        Month.entries.any { rules.satisfiesTheRules(this, it) }
 }

@@ -52,4 +52,17 @@ class TickerAnalyzerResource(
         return service.goodTickersFor(tickers, timeRange, month, rules)
             .map { TickerDTO(it.symbol) }
     }
+
+    @GetMapping("/api/goodTickers/")
+    fun analyze(
+        @RequestParam tickerSymbols: List<String>?
+    ): List<TickerDTO> {
+
+        val tickers = adapter.toDomain(tickerSymbols) ?: properties.defaultTickers()
+        val timeRange = properties.defaultTimeRange()
+        val rules = properties.defaultRulesForAGoodMonth()
+
+        return service.goodTickersFor(tickers, timeRange, rules)
+            .map { TickerDTO(it.symbol) }
+    }
 }
