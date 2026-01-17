@@ -1,32 +1,32 @@
-package com.myrran.stockator.infrastructure.repositories.alphavantagemonthlyseries
+package com.myrran.stockator.infrastructure.repositories.alphavantagetickerhistory
 
 import com.myrran.stockator.domain.misc.Money
-import com.myrran.stockator.domain.tickerseries.MonthlyData
-import com.myrran.stockator.domain.tickerseries.Ticker
-import com.myrran.stockator.domain.tickerseries.TickerMonthlySeries
+import com.myrran.stockator.domain.tickerhistory.MonthlyRates
+import com.myrran.stockator.domain.tickerhistory.Ticker
+import com.myrran.stockator.domain.tickerhistory.TickerHistory
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 
 @Component
-class AlphaVantageAdapter {
+class AVTickerHistoryAdapter {
 
-    fun toDomain(entity: AVTickerMonthlySeriesEntity): TickerMonthlySeries {
+    fun toDomain(entity: AVTickerHistoryEntity): TickerHistory {
 
-        val mapByYearAndMonth: Map<Int, Map<Int, MonthlyDataRaw>> = toMapByYearAndMonth(entity.monthlyTimeSeries)
+        val mapByYearAndMonth: Map<Int, Map<Int, MonthlyDataRaw>> = toMapByYearAndMonth(entity.monthlyHistory)
         val monthlyData = mapByYearAndMonth
             .flatMap { it.value.values }
             .map { toMonthlyData(it, mapByYearAndMonth) }
 
-        return TickerMonthlySeries(
+        return TickerHistory(
             ticker = Ticker(entity.metadata.symbol),
-            monthlyData = monthlyData
+            monthlyHistory = monthlyData
         )
     }
 
     // HELPER:
     //--------------------------------------------------------------------------------------------------------
 
-    private fun toMapByYearAndMonth(entities: Map<String, AVMonthlyDataEntity>): Map<Int, Map<Int, MonthlyDataRaw>> =
+    private fun toMapByYearAndMonth(entities: Map<String, AVMonthlyRatesEntity>): Map<Int, Map<Int, MonthlyDataRaw>> =
 
         entities
             .mapKeys { toLocalDate(it.key) }
@@ -34,9 +34,9 @@ class AlphaVantageAdapter {
             .groupBy { it.key.year }
             .mapValues { entry -> entry.value.associate { it.key.monthValue to toMonthlyDataRaw(it.value, it.key) } }
 
-    private fun toMonthlyData(entity: MonthlyDataRaw, mapByYearAndMonth: Map<Int, Map<Int, MonthlyDataRaw>>): MonthlyData =
+    private fun toMonthlyData(entity: MonthlyDataRaw, mapByYearAndMonth: Map<Int, Map<Int, MonthlyDataRaw>>): MonthlyRates =
 
-        MonthlyData(
+        MonthlyRates(
             openingPrice = mapByYearAndMonth.getPreviousMonthClosingPrice(entity.closingDay.previousMonth()),
             closingDay = entity.closingDay,
             closingPrice = entity.closingPrice
@@ -46,7 +46,7 @@ class AlphaVantageAdapter {
 
         LocalDate.parse(dateString)
 
-    private fun toMonthlyDataRaw(entity: AVMonthlyDataEntity, closingDate: LocalDate): MonthlyDataRaw =
+    private fun toMonthlyDataRaw(entity: AVMonthlyRatesEntity, closingDate: LocalDate): MonthlyDataRaw =
 
         MonthlyDataRaw(
             closingPrice = Money(entity.close.toDouble()),

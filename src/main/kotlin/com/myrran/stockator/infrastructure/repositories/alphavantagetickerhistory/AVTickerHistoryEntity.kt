@@ -1,4 +1,4 @@
-package com.myrran.stockator.infrastructure.repositories.alphavantagemonthlyseries
+package com.myrran.stockator.infrastructure.repositories.alphavantagetickerhistory
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
@@ -7,12 +7,12 @@ import java.io.Serializable
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class AVTickerMonthlySeriesEntity(
+data class AVTickerHistoryEntity(
 
     @JsonProperty("Meta Data")
     val metadata: AVMetadataEntity,
     @JsonProperty("Monthly Time Series")
-    val monthlyTimeSeries: Map<String, AVMonthlyDataEntity>
+    val monthlyHistory: Map<String, AVMonthlyRatesEntity>
 
 ): Serializable
 
@@ -29,7 +29,7 @@ data class AVMetadataEntity(
 
 ): Serializable
 
-data class AVMonthlyDataEntity(
+data class AVMonthlyRatesEntity(
 
     @JsonProperty(value = "1. open")
     val open: String,

@@ -1,10 +1,10 @@
-package com.myrran.stockator.domain.tickerseries
+package com.myrran.stockator.domain.tickerhistory
 
 import com.myrran.stockator.domain.misc.IncreaseI
 import com.myrran.stockator.domain.misc.Money
 import java.time.LocalDate
 
-class MonthlyData(
+class MonthlyRates(
     val openingPrice: Money,
     val closingPrice: Money,
     val closingDay: LocalDate

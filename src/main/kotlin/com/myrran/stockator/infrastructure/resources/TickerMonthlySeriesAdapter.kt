@@ -3,14 +3,14 @@ package com.myrran.stockator.infrastructure.resources
 import com.myrran.stockator.domain.misc.Increase
 import com.myrran.stockator.domain.misc.IncreaseI
 import com.myrran.stockator.domain.misc.IncreaseNaN
-import com.myrran.stockator.domain.tickerseries.TickerMonthlySeries
+import com.myrran.stockator.domain.tickerhistory.TickerHistory
 import org.springframework.stereotype.Component
 import java.time.Month
 
 @Component
 class TickerMonthlySeriesAdapter {
 
-    fun fromDomain(domain: TickerMonthlySeries): TickerMonthlySeriesDTO =
+    fun fromDomain(domain: TickerHistory): TickerMonthlySeriesDTO =
         TickerMonthlySeriesDTO(
             ticker = domain.ticker.symbol,
             firstDate = domain.firstDate(),
@@ -18,7 +18,7 @@ class TickerMonthlySeriesAdapter {
             averageIncreasesByMonth = Month.entries.associateWith { domain.averageIncreaseOf(it).value },
             medianIncreasesByMonth = Month.entries.associateWith { domain.medianIncreaseOf(it).value },
             numberOfNegativeIncreasesByMonth = Month.entries.associateWith { domain.numberOfNegativeIncreasesOn(it) },
-            monthlyData = domain.monthlyData.map {
+            monthlyData = domain.monthlyHistory.map {
                 MonthlyDataDTO(
                     openingPrice = it.openingPrice.amount,
                     closingPrice = it.closingPrice.amount,

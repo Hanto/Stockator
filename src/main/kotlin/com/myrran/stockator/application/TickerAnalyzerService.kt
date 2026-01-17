@@ -1,19 +1,18 @@
 package com.myrran.stockator.application
 
 import com.myrran.stockator.domain.rules.RulesForAGoodMonthI
-import com.myrran.stockator.domain.tickerseries.Ticker
-import com.myrran.stockator.domain.tickerseries.TickerMonthlySeries
-import com.myrran.stockator.infrastructure.repositories.alphavantagemonthlyseries.AlphaVantageRepository
+import com.myrran.stockator.domain.tickerhistory.Ticker
+import com.myrran.stockator.domain.tickerhistory.TickerHistory
 import org.springframework.stereotype.Service
 import java.time.Month
 
 @Service
 class TickerAnalyzerService(
 
-    val repository: AlphaVantageRepository
+    val repository: TickerHistoryRepository
 
 ) {
-    fun getMonthlySeries(ticker: Ticker): TickerMonthlySeries? =
+    fun getMonthlySeries(ticker: Ticker): TickerHistory? =
 
         repository.findBy(ticker)
 
