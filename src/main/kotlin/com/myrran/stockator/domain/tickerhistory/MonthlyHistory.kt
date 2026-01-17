@@ -1,15 +1,19 @@
 package com.myrran.stockator.domain.tickerhistory
 
 import com.myrran.stockator.domain.misc.Increase
+import com.myrran.stockator.domain.misc.Percentage
 import com.myrran.stockator.domain.misc.Year
 import com.myrran.stockator.domain.misc.average
 import com.myrran.stockator.domain.misc.median
+import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import java.time.Month
 
 class MonthlyHistory(
     val monthlyRates: List<MonthlyRates>
 ) {
+    private val log = LoggerFactory.getLogger(javaClass)
+
     private val byYearAndMonth: Map<Year, Map<Month, MonthlyRates>> = monthlyRates
         .groupBy { Year(it.closingDay.year) }
         .mapValues { entry -> entry.value.associateBy { it.closingDay.month } }
@@ -25,6 +29,21 @@ class MonthlyHistory(
 
     fun lastDate(): LocalDate =
         monthlyRates.maxOfOrNull { it.closingDay }!!
+
+    fun yearlyIncrease(): Map<Year, Increase> =
+        byYearAndMonth
+            .mapValues { entry ->
+
+                entry.value.values
+                    .map { it.increase }
+                    .filterIsInstance<Increase>()
+                    .also { log.info("increases: ${it.map { it.value }}") }
+                    .map { it.toPercentage() }
+                    .also { log.info("percentages: ${it.map { it.value }}") }
+                    .fold(Percentage(1.0) ) { acc, next -> acc * next }
+                    .also { log.info("result: $it") }
+                    .toIncrease()
+            }
 
     fun averageIncreaseOf(month: Month): Increase =
         byMonth[month]

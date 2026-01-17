@@ -2,9 +2,16 @@ package com.myrran.stockator.domain.misc
 
 import org.apache.commons.math3.stat.descriptive.rank.Median
 
-sealed interface IncreaseI
+sealed interface IncreaseI {
+    fun toPercentage(): PercentageI
+}
 
-data object IncreaseNaN: IncreaseI
+data object IncreaseNaN: IncreaseI {
+
+    override fun toPercentage(): PercentageI = PercentageNaN
+}
+
+// 25% increase = 1.25% Percentage
 data class Increase(
     val value: Double
 ): IncreaseI
@@ -14,6 +21,9 @@ data class Increase(
 
     operator fun times(percentage: Percentage): Increase =
         Increase(value * percentage.value)
+
+    override fun toPercentage(): Percentage =
+        Percentage((value + 100) / 100)
 }
 
 fun Collection<IncreaseI>.average(): Increase =

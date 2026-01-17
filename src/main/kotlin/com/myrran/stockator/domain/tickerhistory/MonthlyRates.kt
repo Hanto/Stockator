@@ -9,5 +9,9 @@ class MonthlyRates(
     val closingPrice: Money,
     val closingDay: LocalDate
 ) {
-    val increase: IncreaseI = (closingPrice / openingPrice).toIncrease()
+    val increase: IncreaseI =
+        when (openingPrice.isZero()) {
+            true -> (closingPrice / closingPrice).toIncrease()
+            false -> (closingPrice / openingPrice).toIncrease()
+        }
 }

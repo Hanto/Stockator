@@ -8,6 +8,7 @@ import com.myrran.stockator.domain.tickerhistory.TickerHistory
 import com.myrran.stockator.domain.tickerhistory.TickerId
 import org.springframework.stereotype.Component
 import java.time.Month
+import java.util.Locale
 
 @Component
 class TickerAnalyzerAdapter {
@@ -17,8 +18,9 @@ class TickerAnalyzerAdapter {
             ticker = domain.tickerId.symbol,
             firstDate = domain.firstDate(),
             lastDate = domain.lastDate(),
-            averageIncreasesByMonth = Month.entries.associateWith { domain.averageIncreaseOf(it).value },
-            medianIncreasesByMonth = Month.entries.associateWith { domain.medianIncreaseOf(it).value },
+            yearIncrease = domain.monthlyHistory.yearlyIncrease().mapKeys { it.key.value }.mapValues { it.value.value.roundTo2Decimals() },
+            averageIncreasesByMonth = Month.entries.associateWith { domain.averageIncreaseOf(it).value.roundTo2Decimals() },
+            medianIncreasesByMonth = Month.entries.associateWith { domain.medianIncreaseOf(it).value.roundTo2Decimals() },
             numberOfNegativeIncreasesByMonth = Month.entries.associateWith { domain.numberOfNegativeIncreasesOn(it) },
             monthlyData = domain.monthlyHistory.monthlyRates
                 .map { fromDomain(it)}
@@ -34,7 +36,7 @@ class TickerAnalyzerAdapter {
             openingPrice = domain.openingPrice.amount,
             closingPrice = domain.closingPrice.amount,
             closingDay = domain.closingDay,
-            increase = domain.increase.toDouble()
+            increase = domain.increase.toDouble()?.roundTo2Decimals()
         )
 
     private fun IncreaseI.toDouble(): Double? =
@@ -42,4 +44,9 @@ class TickerAnalyzerAdapter {
             is Increase -> this.value
             is IncreaseNaN -> null
         }
+
+    private fun Double.roundTo2Decimals(): Double =
+        "%.2f".format(Locale.UK, this).toDouble()
 }
+
+

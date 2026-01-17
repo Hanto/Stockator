@@ -7,6 +7,7 @@ data class TickerMonthlySeriesDTO(
     val ticker: String,
     val firstDate: LocalDate,
     val lastDate: LocalDate,
+    val yearIncrease: Map<Int, Double>,
     val averageIncreasesByMonth: Map<Month, Double>,
     val medianIncreasesByMonth: Map<Month, Double>,
     val numberOfNegativeIncreasesByMonth: Map<Month, Int>,
