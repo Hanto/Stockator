@@ -1,6 +1,6 @@
 package com.myrran.stockator.infrastructure.repositories
 
-import com.myrran.stockator.domain.tickerhistory.Ticker
+import com.myrran.stockator.domain.tickerhistory.TickerId
 import com.myrran.stockator.infrastructure.repositories.alphavantagetickerhistory.AVClient
 import com.myrran.stockator.infrastructure.repositories.alphavantagetickerhistory.AVClientProperties
 import org.junit.jupiter.api.Test
@@ -20,8 +20,8 @@ class AVClientTest {
             )
         )
 
-        val ticker = Ticker("IBM")
-        val result = client.findBy(ticker)
+        val tickerId = TickerId("IBM")
+        val result = client.findBy(tickerId)
 
         println(result)
     }

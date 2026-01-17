@@ -1,11 +1,12 @@
 package com.myrran.stockator.application
 
-import com.myrran.stockator.domain.tickerhistory.Ticker
+import com.myrran.stockator.domain.misc.TimeRange
 import com.myrran.stockator.domain.tickerhistory.TickerHistory
+import com.myrran.stockator.domain.tickerhistory.TickerId
 import java.util.concurrent.CompletableFuture
 
 interface TickerHistoryRepository {
 
-    fun findBy(ticker: Ticker): TickerHistory?
-    fun findByAsync(ticker: Ticker): CompletableFuture<TickerHistory?>
+    fun findBy(tickerId: TickerId, timeRange: TimeRange): TickerHistory?
+    fun findByAsync(tickerId: TickerId, timeRange: TimeRange): CompletableFuture<TickerHistory?>
 }

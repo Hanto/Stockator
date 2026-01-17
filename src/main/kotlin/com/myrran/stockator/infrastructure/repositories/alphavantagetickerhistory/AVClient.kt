@@ -1,6 +1,6 @@
 package com.myrran.stockator.infrastructure.repositories.alphavantagetickerhistory
 
-import com.myrran.stockator.domain.tickerhistory.Ticker
+import com.myrran.stockator.domain.tickerhistory.TickerId
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.http.converter.HttpMessageConversionException
@@ -19,8 +19,8 @@ class AVClient(
 {
     private val log = LoggerFactory.getLogger(this.javaClass)
 
-    @Cacheable(cacheManager = "mapDBCacheManager", cacheNames = ["tickerMonthlySeries"], key = "#ticker.symbol")
-    fun findBy(ticker: Ticker): AVTickerHistoryEntity? =
+    @Cacheable(cacheManager = "mapDBCacheManager", cacheNames = ["tickerMonthlySeries"], key = "#tickerId.symbol")
+    fun findBy(tickerId: TickerId): AVTickerHistoryEntity? =
 
         try {
 
@@ -32,14 +32,14 @@ class AVClient(
             
             """.trimIndent().replace("\n", "")
 
-            restTemplate.getForObject<AVTickerHistoryEntity>(url, ticker.symbol)
-                .also { log.info("Fetched monthly series for {}", ticker) }
+            restTemplate.getForObject<AVTickerHistoryEntity>(url, tickerId.symbol)
+                .also { log.info("Fetched history for: {}", tickerId.symbol) }
         }
         catch (e: RestClientException) {
 
             when (e.cause) {
 
-                is HttpMessageNotReadableException, is HttpMessageConversionException -> null.also { log.warn("No readable for {}", ticker) }
+                is HttpMessageNotReadableException, is HttpMessageConversionException -> null.also { log.warn("History not readable for {}", tickerId.symbol) }
                 else -> throw e
             }
         }

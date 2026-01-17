@@ -10,10 +10,10 @@ data class TickerMonthlySeriesDTO(
     val averageIncreasesByMonth: Map<Month, Double>,
     val medianIncreasesByMonth: Map<Month, Double>,
     val numberOfNegativeIncreasesByMonth: Map<Month, Int>,
-    val monthlyData: List<MonthlyDataDTO>,
+    val monthlyData: Map<Int, Map<String, MonthlyRatesDTO>>,
 )
 
-data class MonthlyDataDTO(
+data class MonthlyRatesDTO(
     val openingPrice: Double,
     val closingPrice: Double,
     val closingDay: LocalDate,

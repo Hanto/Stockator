@@ -1,6 +1,6 @@
 package com.myrran.stockator.domain.tickerhistory
 
-data class Ticker(
+data class TickerId(
 
     val symbol: String
 )

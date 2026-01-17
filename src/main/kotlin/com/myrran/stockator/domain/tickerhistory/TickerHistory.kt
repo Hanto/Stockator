@@ -5,7 +5,7 @@ import java.time.LocalDate
 import java.time.Month
 
 data class TickerHistory(
-    val ticker: Ticker,
+    val tickerId: TickerId,
     val monthlyHistory: MonthlyHistory
 ){
     fun firstDate(): LocalDate =

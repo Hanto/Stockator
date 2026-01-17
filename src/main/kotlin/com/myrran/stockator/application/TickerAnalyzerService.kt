@@ -1,8 +1,9 @@
 package com.myrran.stockator.application
 
+import com.myrran.stockator.domain.misc.TimeRange
 import com.myrran.stockator.domain.rules.RulesForAGoodMonthI
-import com.myrran.stockator.domain.tickerhistory.Ticker
 import com.myrran.stockator.domain.tickerhistory.TickerHistory
+import com.myrran.stockator.domain.tickerhistory.TickerId
 import org.springframework.stereotype.Service
 import java.time.Month
 
@@ -12,21 +13,21 @@ class TickerAnalyzerService(
     val repository: TickerHistoryRepository
 
 ) {
-    fun getMonthlySeries(ticker: Ticker): TickerHistory? =
+    fun getHistory(tickerId: TickerId, historyTimeRange: TimeRange): TickerHistory? =
 
-        repository.findBy(ticker)
+        repository.findBy(tickerId, historyTimeRange)
 
-    fun goodTickersFor(tickers: List<Ticker>, month: Month, rules: RulesForAGoodMonthI): List<Ticker> =
+    fun goodTickersFor(tickerIds: List<TickerId>, historyTimeRange: TimeRange, month: Month, rules: RulesForAGoodMonthI): List<TickerId> =
 
-        tickers
-            .map { repository.findByAsync(it) }
+        tickerIds
+            .map { repository.findByAsync(it, historyTimeRange) }
             .mapNotNull { it.get() }
             .filter { rules.satisfiesTheRules(it, month) }
-            .map { it.ticker }
+            .map { it.tickerId }
 
-    fun goodMonthsFor(ticker: Ticker, rules: RulesForAGoodMonthI): List<Month> {
+    fun goodMonthsFor(tickerId: TickerId, historyTimeRange: TimeRange, rules: RulesForAGoodMonthI): List<Month> {
 
-        val series = repository.findBy(ticker) ?: return emptyList()
-        return Month.entries.filter { rules.satisfiesTheRules(series, it) }
+        val history = repository.findBy(tickerId, historyTimeRange) ?: return emptyList()
+        return Month.entries.filter { rules.satisfiesTheRules(history, it) }
     }
 }

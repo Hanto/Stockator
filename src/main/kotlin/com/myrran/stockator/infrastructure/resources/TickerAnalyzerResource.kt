@@ -1,10 +1,7 @@
 package com.myrran.stockator.infrastructure.resources
 
 import com.myrran.stockator.application.TickerAnalyzerService
-import com.myrran.stockator.domain.misc.Increase
-import com.myrran.stockator.domain.misc.Percentage
-import com.myrran.stockator.domain.rules.RulesForAGoodMonth
-import com.myrran.stockator.domain.tickerhistory.Ticker
+import com.myrran.stockator.domain.tickerhistory.TickerId
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
@@ -14,7 +11,7 @@ import java.time.Month
 @RestController
 class TickerAnalyzerResource(
     val service: TickerAnalyzerService,
-    val adapter: TickerMonthlySeriesAdapter,
+    val adapter: TickerAnalyzerAdapter,
     val properties: TickerAnalyzerProperties
 ) {
 
@@ -23,9 +20,10 @@ class TickerAnalyzerResource(
         @PathVariable tickerSymbol: String
     ): TickerMonthlySeriesDTO? {
 
-        val ticker = Ticker(tickerSymbol)
+        val tickerId = TickerId(tickerSymbol)
+        val timeRange = properties.defaultTimeRange()
 
-        return service.getMonthlySeries(ticker)
+        return service.getHistory(tickerId, timeRange)
             ?.let { adapter.fromDomain(it) }
     }
 
@@ -34,14 +32,11 @@ class TickerAnalyzerResource(
         @PathVariable tickerSymbol: String,
     ): List<String> {
 
-        val ticker = Ticker(tickerSymbol)
-        val rules = RulesForAGoodMonth(
-            minimumAverageIncrease = Increase(properties.goodMonthMinimumAverageIncrease),
-            minimumMedianComparedToAverage = Percentage(properties.goodMonthMimumMedianComparedToAverage),
-            maximumNumberOfNegativeIncreases = properties.goodMonthMaximumNumberOfNegativeIncreases
-        )
+        val tickerId = TickerId(tickerSymbol)
+        val timeRange = properties.defaultTimeRange()
+        val rules = properties.defaultRulesForAGoodMonth()
 
-        return service.goodMonthsFor(ticker, rules).map { it.name }
+        return service.goodMonthsFor(tickerId, timeRange, rules).map { it.name }
     }
 
     @GetMapping("/api/goodTickersFor/{month}")
@@ -50,14 +45,11 @@ class TickerAnalyzerResource(
         @RequestParam tickerSymbols: List<String>?
     ): List<TickerDTO> {
 
-        val tickers = (tickerSymbols ?: properties.defaultTickers).map { Ticker(it) }
-        val rules = RulesForAGoodMonth(
-            minimumAverageIncrease = Increase(properties.goodMonthMinimumAverageIncrease),
-            minimumMedianComparedToAverage = Percentage(properties.goodMonthMimumMedianComparedToAverage),
-            maximumNumberOfNegativeIncreases = properties.goodMonthMaximumNumberOfNegativeIncreases
-        )
+        val tickers = adapter.toDomain(tickerSymbols) ?: properties.defaultTickers()
+        val timeRange = properties.defaultTimeRange()
+        val rules = properties.defaultRulesForAGoodMonth()
 
-        return service.goodTickersFor(tickers, month, rules)
+        return service.goodTickersFor(tickers, timeRange, month, rules)
             .map { TickerDTO(it.symbol) }
     }
 }

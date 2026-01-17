@@ -1,25 +1,33 @@
 package com.myrran.stockator.infrastructure.repositories.alphavantagetickerhistory
 
 import com.myrran.stockator.domain.misc.Money
+import com.myrran.stockator.domain.misc.TimeRange
 import com.myrran.stockator.domain.tickerhistory.MonthlyHistory
 import com.myrran.stockator.domain.tickerhistory.MonthlyRates
-import com.myrran.stockator.domain.tickerhistory.Ticker
 import com.myrran.stockator.domain.tickerhistory.TickerHistory
+import com.myrran.stockator.domain.tickerhistory.TickerId
 import org.springframework.stereotype.Component
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 @Component
 class AVTickerHistoryAdapter {
 
-    fun toDomain(entity: AVTickerHistoryEntity): TickerHistory {
+    fun toDomain(entity: AVTickerHistoryEntity, timeRange: TimeRange): TickerHistory {
 
-        val mapByYearAndMonth: Map<Int, Map<Int, MonthlyDataRaw>> = toMapByYearAndMonth(entity.monthlyHistory)
-        val monthlyRates = mapByYearAndMonth
-            .flatMap { it.value.values }
-            .map { toMonthlyData(it, mapByYearAndMonth) }
+        val monthlyRatesRaw = entity.monthlyHistory.entries
+            .map { toMonthlyDataRaw(toLocalDate(it.key), it.value) }
+            .filter { it.closingDay.hasLessThan(timeRange.amount, timeRange.unit) }
+
+        val mapByYearAndMonth = monthlyRatesRaw
+            .groupBy { it.closingDay.year }
+            .mapValues { entry -> entry.value.associateBy { it.closingDay.monthValue } }
+
+        val monthlyRates = monthlyRatesRaw
+            .map { toMonthlyRates(it, mapByYearAndMonth) }
 
         return TickerHistory(
-            ticker = Ticker(entity.metadata.symbol),
+            tickerId = TickerId(entity.metadata.symbol),
             monthlyHistory = MonthlyHistory(monthlyRates)
         )
     }
@@ -27,15 +35,14 @@ class AVTickerHistoryAdapter {
     // HELPER:
     //--------------------------------------------------------------------------------------------------------
 
-    private fun toMapByYearAndMonth(entities: Map<String, AVMonthlyRatesEntity>): Map<Int, Map<Int, MonthlyDataRaw>> =
+    private fun toMonthlyDataRaw(closingDate: LocalDate, entity: AVMonthlyRatesEntity): MonthlyRatesRaw =
 
-        entities
-            .mapKeys { toLocalDate(it.key) }
-            .entries
-            .groupBy { it.key.year }
-            .mapValues { entry -> entry.value.associate { it.key.monthValue to toMonthlyDataRaw(it.value, it.key) } }
+        MonthlyRatesRaw(
+            closingDay = closingDate,
+            closingPrice = Money(entity.close.toDouble())
+        )
 
-    private fun toMonthlyData(entity: MonthlyDataRaw, mapByYearAndMonth: Map<Int, Map<Int, MonthlyDataRaw>>): MonthlyRates =
+    private fun toMonthlyRates(entity: MonthlyRatesRaw, mapByYearAndMonth: Map<Int, Map<Int, MonthlyRatesRaw>>): MonthlyRates =
 
         MonthlyRates(
             openingPrice = mapByYearAndMonth.getPreviousMonthClosingPrice(entity.closingDay.previousMonth()),
@@ -47,22 +54,18 @@ class AVTickerHistoryAdapter {
 
         LocalDate.parse(dateString)
 
-    private fun toMonthlyDataRaw(entity: AVMonthlyRatesEntity, closingDate: LocalDate): MonthlyDataRaw =
-
-        MonthlyDataRaw(
-            closingPrice = Money(entity.close.toDouble()),
-            closingDay = closingDate
-        )
-
     private fun LocalDate.previousMonth(): LocalDate =
 
         this.minusMonths(1)
 
-    private fun Map<Int, Map<Int, MonthlyDataRaw>>.getPreviousMonthClosingPrice(date: LocalDate): Money =
+    private fun Map<Int, Map<Int, MonthlyRatesRaw>>.getPreviousMonthClosingPrice(date: LocalDate): Money =
 
         this[date.year]?.get(date.monthValue)?.closingPrice ?: Money(0.0)
 
-    private data class MonthlyDataRaw(
+    fun LocalDate.hasLessThan(amount: Long, unit: ChronoUnit): Boolean =
+        LocalDate.now().minus(amount, unit) < this
+
+    private data class MonthlyRatesRaw(
         val closingDay: LocalDate,
         val closingPrice: Money
     )
