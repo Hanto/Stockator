@@ -14,7 +14,7 @@ data class RulesForAGoodMonth(
 
     val minimumAverageIncrease: Increase,
     val minimumMedianComparedToAverage: Percentage,
-    val maximumNumberOfNegativeIncreases: Int
+    val maximumNumberOfNegativeIncreases: Int,
 
 ): RulesForAGoodMonthI {
 

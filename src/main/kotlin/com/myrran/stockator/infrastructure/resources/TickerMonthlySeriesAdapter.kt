@@ -18,7 +18,7 @@ class TickerMonthlySeriesAdapter {
             averageIncreasesByMonth = Month.entries.associateWith { domain.averageIncreaseOf(it).value },
             medianIncreasesByMonth = Month.entries.associateWith { domain.medianIncreaseOf(it).value },
             numberOfNegativeIncreasesByMonth = Month.entries.associateWith { domain.numberOfNegativeIncreasesOn(it) },
-            monthlyData = domain.monthlyHistory.map {
+            monthlyData = domain.monthlyHistory.monthlyRates.map {
                 MonthlyDataDTO(
                     openingPrice = it.openingPrice.amount,
                     closingPrice = it.closingPrice.amount,

@@ -1,6 +1,7 @@
 package com.myrran.stockator.infrastructure.repositories.alphavantagetickerhistory
 
 import com.myrran.stockator.domain.misc.Money
+import com.myrran.stockator.domain.tickerhistory.MonthlyHistory
 import com.myrran.stockator.domain.tickerhistory.MonthlyRates
 import com.myrran.stockator.domain.tickerhistory.Ticker
 import com.myrran.stockator.domain.tickerhistory.TickerHistory
@@ -13,13 +14,13 @@ class AVTickerHistoryAdapter {
     fun toDomain(entity: AVTickerHistoryEntity): TickerHistory {
 
         val mapByYearAndMonth: Map<Int, Map<Int, MonthlyDataRaw>> = toMapByYearAndMonth(entity.monthlyHistory)
-        val monthlyData = mapByYearAndMonth
+        val monthlyRates = mapByYearAndMonth
             .flatMap { it.value.values }
             .map { toMonthlyData(it, mapByYearAndMonth) }
 
         return TickerHistory(
             ticker = Ticker(entity.metadata.symbol),
-            monthlyHistory = monthlyData
+            monthlyHistory = MonthlyHistory(monthlyRates)
         )
     }
 
