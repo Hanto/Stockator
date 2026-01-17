@@ -4,7 +4,7 @@ import java.time.LocalDate
 import java.time.Month
 
 data class TickerMonthlySeriesDTO(
-    val ticker: String,
+    val tickerId: String,
     val firstDate: LocalDate,
     val lastDate: LocalDate,
     val yearIncrease: Map<Int, Double>,

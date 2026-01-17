@@ -12,7 +12,7 @@ class TickerAnalyzerAdapter {
 
     fun fromDomain(domain: TickerHistory): TickerMonthlySeriesDTO =
         TickerMonthlySeriesDTO(
-            ticker = domain.tickerId.symbol,
+            tickerId = domain.tickerId.symbol,
             firstDate = domain.firstDate(),
             lastDate = domain.lastDate(),
             yearIncrease = domain.history.yearlyIncrease().mapKeys { it.key.value }.mapValues { it.value.value.roundTo2Decimals() },
