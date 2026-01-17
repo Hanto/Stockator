@@ -29,11 +29,11 @@ class TickerAnalyzerResource(
     @GetMapping("/api/goodMonthsFor/{tickerSymbol}")
     fun analyze(
         @PathVariable tickerSymbol: String,
-    ): List<Month> {
+    ): List<String> {
 
         val ticker = Ticker(tickerSymbol)
 
-        return service.goodMonthsFor(ticker)
+        return service.goodMonthsFor(ticker).map { it.name }
     }
 
     @GetMapping("/api/goodTickersFor/{month}")

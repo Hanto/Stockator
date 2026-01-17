@@ -27,5 +27,5 @@ data class TickerMonthlySeries(
         byMonth[month]?.map { it.increase }?.median() ?: Percentage(0.0)
 
     fun numberOfNegativeIncreasesOn(month: Month): Int =
-        byMonth[month]?.map { it.increase}?.filterIsInstance<Percentage>()?.count { it.value > 0 } ?: 0
+        byMonth[month]?.map { it.increase}?.filterIsInstance<Percentage>()?.count { it.value < 0 } ?: 0
 }
