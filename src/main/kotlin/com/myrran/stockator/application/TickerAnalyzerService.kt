@@ -14,7 +14,12 @@ class TickerAnalyzerService(
 
     fun analyzeTickers(tickers: List<Ticker>, month: Month): List<Ticker> =
 
-        tickers.filter { analyzeTicker(it, month) }
+        tickers
+            .map { repository.findByAsync(it) }
+            .mapNotNull { it.get() }
+            .filter { analyzeSeries(it, month) }
+            .map { it.ticker }
+
 
     fun analyzeTicker(ticker: Ticker, month: Month): Boolean =
 

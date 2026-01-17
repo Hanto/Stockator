@@ -1,17 +1,12 @@
-package com.myrran.stockator.infrastructure.spring
+package com.myrran.stockator.infrastructure.resttemplatewithretry
 
-import com.myrran.stockator.infrastructure.resttemplatewithretry.RestTemplateWithRetry
-import com.myrran.stockator.infrastructure.resttemplatewithretry.RetryTemplateBuilder
-import com.myrran.stockator.infrastructure.resttemplatewithretry.RetryTemplateProperties
-import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.restclient.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.retry.support.RetryTemplate
 
 @Configuration
-@EnableConfigurationProperties
-class SpringConfiguration {
+class RestTemplateWithRetryConfiguration {
 
     @Bean
     fun defaultRetyTemplateForRest(
@@ -25,9 +20,8 @@ class SpringConfiguration {
             backOffMultiplier = retryTemplateProperties.backOffMultiplier
         ).build()
 
-
     @Bean
-    fun alphaVantageRestTemplate(
+    fun alphaVantageRestTemplateWithRetry(
         builder: RestTemplateBuilder,
         defaultRetryTemplateForRest: RetryTemplate
     ): RestTemplateWithRetry =
@@ -36,5 +30,4 @@ class SpringConfiguration {
             restTemplate = builder.build(),
             retryTemplate = defaultRetryTemplateForRest
         )
-
 }

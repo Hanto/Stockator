@@ -28,12 +28,12 @@ class AlphaVantageClient(
             val url = """
                 ${alphaVantageProperties.url}
                 ?function=${alphaVantageProperties.monthlyFunction}
-                &symbol=${ticker.symbol}
                 &apikey=${alphaVantageProperties.apiKey}
+                &symbol={symbol}
             
             """.trimIndent().replace("\n", "")
 
-            restTemplate.getForObject<AVTickerMonthlySeriesEntity>(url)
+            restTemplate.getForObject<AVTickerMonthlySeriesEntity>(url, ticker.symbol)
         }
         catch (e: RestClientException) {
 
