@@ -8,10 +8,6 @@ data class Money(
 
         amount == 0.0
 
-    operator fun div(other: Money): PercentageI =
-
-        when (this.isZero() || other.isZero()){
-            true -> PercentageNaN
-            false -> Percentage(amount / other.amount)
-        }
+    operator fun div(other: Money): Percentage =
+        Percentage(amount / other.amount)
 }

@@ -1,8 +1,5 @@
 package com.myrran.stockator.infrastructure.resources
 
-import com.myrran.stockator.domain.misc.Increase
-import com.myrran.stockator.domain.misc.IncreaseI
-import com.myrran.stockator.domain.misc.IncreaseNaN
 import com.myrran.stockator.domain.tickerhistory.MonthHistory
 import com.myrran.stockator.domain.tickerhistory.TickerHistory
 import com.myrran.stockator.domain.tickerhistory.TickerId
@@ -36,14 +33,8 @@ class TickerAnalyzerAdapter {
             openingPrice = domain.openingPrice.amount,
             closingPrice = domain.closingPrice.amount,
             closingDay = domain.closingDay,
-            increase = domain.increase.toDouble()?.roundTo2Decimals()
+            increase = domain.increase.value.roundTo2Decimals()
         )
-
-    private fun IncreaseI.toDouble(): Double? =
-        when (this) {
-            is Increase -> this.value
-            is IncreaseNaN -> null
-        }
 
     private fun Double.roundTo2Decimals(): Double =
         "%.2f".format(Locale.UK, this).toDouble()

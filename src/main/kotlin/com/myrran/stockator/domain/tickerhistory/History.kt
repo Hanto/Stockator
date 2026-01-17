@@ -4,15 +4,12 @@ import com.myrran.stockator.domain.misc.Increase
 import com.myrran.stockator.domain.misc.Year
 import com.myrran.stockator.domain.misc.average
 import com.myrran.stockator.domain.misc.median
-import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import java.time.Month
 
 class History(
     val monthlyHistory: List<MonthHistory>
 ) {
-    private val log = LoggerFactory.getLogger(javaClass)
-
     private val byYearAndMonth: Map<Year, YearHistory> = monthlyHistory
         .groupBy { Year(it.closingDay.year) }
         .mapValues { entry -> YearHistory(entry.value) }
@@ -31,7 +28,7 @@ class History(
 
     fun yearlyIncrease(): Map<Year, Increase> =
         byYearAndMonth
-            .mapValues { it.value.increase() as Increase }
+            .mapValues { it.value.increase() }
 
     fun averageIncreaseOf(month: Month): Increase =
         byMonth[month]
@@ -46,6 +43,5 @@ class History(
     fun numberOfNegativeIncreasesOn(month: Month): Int =
         byMonth[month]
             ?.map { it.increase}
-            ?.filterIsInstance<Increase>()
             ?.count { it.value < 0 } ?: 0
 }

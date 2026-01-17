@@ -1,6 +1,6 @@
 package com.myrran.stockator.domain.tickerhistory
 
-import com.myrran.stockator.domain.misc.IncreaseI
+import com.myrran.stockator.domain.misc.Increase
 import com.myrran.stockator.domain.misc.Money
 import java.time.LocalDate
 import java.time.Month
@@ -23,9 +23,5 @@ class YearHistory(
     fun closingPrice(): Money =
         byMonth[lastDate().month]!!.closingPrice
 
-    fun increase(): IncreaseI =
-        when (openingPrice().isZero()) {
-            true -> (closingPrice() / closingPrice()).toIncrease()
-            false -> (closingPrice() / openingPrice()).toIncrease()
-        }
+    fun increase(): Increase =(closingPrice() / openingPrice()).toIncrease()
 }
