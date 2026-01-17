@@ -15,7 +15,7 @@ class TickerAnalyzerResource(
     val properties: TickerProperties
 ) {
 
-    @GetMapping("api/monthlyseries/{tickerSymbol}")
+    @GetMapping("api/monthlySeries/{tickerSymbol}")
     fun getMonthlySeries(
         @PathVariable tickerSymbol: String
     ): TickerMonthlySeriesDTO? {
@@ -26,18 +26,17 @@ class TickerAnalyzerResource(
             ?.let { adapter.fromDomain(it) }
     }
 
-    @GetMapping("/api/analyze/{month}/{tickerSymbol}")
+    @GetMapping("/api/goodMonthsFor/{tickerSymbol}")
     fun analyze(
         @PathVariable tickerSymbol: String,
-        @PathVariable month: Month
-    ): Boolean {
+    ): List<Month> {
 
         val ticker = Ticker(tickerSymbol)
 
-        return service.hadAGoodMonth(ticker, month)
+        return service.goodMonthsFor(ticker)
     }
 
-    @GetMapping("/api/analyze/{month}")
+    @GetMapping("/api/goodTickersFor/{month}")
     fun analyze(
         @PathVariable month: Month,
         @RequestParam tickerSymbols: List<String>?
@@ -45,7 +44,7 @@ class TickerAnalyzerResource(
 
         val tickers = (tickerSymbols ?: properties.defaultTickers).map { Ticker(it) }
 
-        return service.filterOutWithBadMonths(tickers, month)
+        return service.goodTickersFor(tickers, month)
             .map { TickerDTO(it.symbol) }
     }
 }

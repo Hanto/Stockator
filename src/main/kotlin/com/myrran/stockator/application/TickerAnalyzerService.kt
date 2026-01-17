@@ -16,7 +16,7 @@ class TickerAnalyzerService(
 
         repository.findBy(ticker)
 
-    fun filterOutWithBadMonths(tickers: List<Ticker>, month: Month): List<Ticker> =
+    fun goodTickersFor(tickers: List<Ticker>, month: Month): List<Ticker> =
 
         tickers
             .map { repository.findByAsync(it) }
@@ -24,9 +24,11 @@ class TickerAnalyzerService(
             .filter { hasAGoodMonthOverTheYears(it, month) }
             .map { it.ticker }
 
-    fun hadAGoodMonth(ticker: Ticker, month: Month): Boolean =
+    fun goodMonthsFor(ticker: Ticker): List<Month> {
 
-        repository.findBy(ticker)?.let { hasAGoodMonthOverTheYears(it, month) } ?: false
+        val ticker = repository.findBy(ticker) ?: return emptyList()
+        return Month.entries.filter { hasAGoodMonthOverTheYears(ticker, it) }
+    }
 
     private fun hasAGoodMonthOverTheYears(series: TickerMonthlySeries, month: Month): Boolean {
 
