@@ -20,6 +20,9 @@ class TickerAnalyzerProperties(
     @Value($$"${default.tickers.historicalTimeRange.unit}")
     val defaultHistoricalTimeRangeUnit: String,
 
+    @Value($$"${default.rules.goodMonth.minimumYearsOfHistory}")
+    val defaultMinimumYearsOfHistory: Int,
+
     @Value($$"${default.rules.goodMonth.minimumAverageIncrease}")
     val defaultGoodMonthMinimumAverageIncrease: Double,
 
@@ -40,6 +43,7 @@ class TickerAnalyzerProperties(
 
     fun defaultRulesForAGoodMonth() =
         RulesForAGoodMonth(
+            minimumYearsOfHistory = defaultMinimumYearsOfHistory,
             minimumAverageIncrease = Increase(defaultGoodMonthMinimumAverageIncrease),
             minimumMedianComparedToAverage = Percentage(defaultGoodMonthMimumMedianComparedToAverage),
             maximumNumberOfNegativeIncreases = defaultGoodMonthMaximumNumberOfNegativeIncreases
