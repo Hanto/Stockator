@@ -1,4 +1,4 @@
-package com.myrran.stockator.domain
+package com.myrran.stockator.domain.misc
 
 data class Money(
     val amount: Double
@@ -12,6 +12,6 @@ data class Money(
 
         when (this.isZero() || other.isZero()){
             true -> PercentageNaN
-            false -> Percentage(((amount / other.amount) - 1) * 100f)
+            false -> Percentage(amount / other.amount)
         }
 }

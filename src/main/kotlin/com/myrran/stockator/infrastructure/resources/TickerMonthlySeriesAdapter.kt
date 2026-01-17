@@ -1,9 +1,9 @@
 package com.myrran.stockator.infrastructure.resources
 
-import com.myrran.stockator.domain.Percentage
-import com.myrran.stockator.domain.PercentageI
-import com.myrran.stockator.domain.PercentageNaN
-import com.myrran.stockator.domain.TickerMonthlySeries
+import com.myrran.stockator.domain.misc.Increase
+import com.myrran.stockator.domain.misc.IncreaseI
+import com.myrran.stockator.domain.misc.IncreaseNaN
+import com.myrran.stockator.domain.tickerseries.TickerMonthlySeries
 import org.springframework.stereotype.Component
 import java.time.Month
 
@@ -28,9 +28,9 @@ class TickerMonthlySeriesAdapter {
             }
         )
 
-    fun PercentageI.toDouble(): Double? =
+    fun IncreaseI.toDouble(): Double? =
         when (this) {
-            is Percentage -> this.value
-            is PercentageNaN -> null
+            is Increase -> this.value
+            is IncreaseNaN -> null
         }
 }

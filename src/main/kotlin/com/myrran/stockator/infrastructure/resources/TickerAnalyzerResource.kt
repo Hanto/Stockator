@@ -1,7 +1,10 @@
 package com.myrran.stockator.infrastructure.resources
 
 import com.myrran.stockator.application.TickerAnalyzerService
-import com.myrran.stockator.domain.Ticker
+import com.myrran.stockator.domain.misc.Increase
+import com.myrran.stockator.domain.misc.Percentage
+import com.myrran.stockator.domain.rules.RulesForAGoodMonth
+import com.myrran.stockator.domain.tickerseries.Ticker
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
@@ -12,7 +15,7 @@ import java.time.Month
 class TickerAnalyzerResource(
     val service: TickerAnalyzerService,
     val adapter: TickerMonthlySeriesAdapter,
-    val properties: TickerProperties
+    val properties: TickerAnalyzerProperties
 ) {
 
     @GetMapping("api/monthlySeries/{tickerSymbol}")
@@ -32,8 +35,13 @@ class TickerAnalyzerResource(
     ): List<String> {
 
         val ticker = Ticker(tickerSymbol)
+        val rules = RulesForAGoodMonth(
+            minimumAverageIncrease = Increase(properties.goodMonthMinimumAverageIncrease),
+            minimumMedianComparedToAverage = Percentage(properties.goodMonthMimumMedianComparedToAverage),
+            maximumNumberOfNegativeIncreases = properties.goodMonthMaximumNumberOfNegativeIncreases
+        )
 
-        return service.goodMonthsFor(ticker).map { it.name }
+        return service.goodMonthsFor(ticker, rules).map { it.name }
     }
 
     @GetMapping("/api/goodTickersFor/{month}")
@@ -43,8 +51,13 @@ class TickerAnalyzerResource(
     ): List<TickerDTO> {
 
         val tickers = (tickerSymbols ?: properties.defaultTickers).map { Ticker(it) }
+        val rules = RulesForAGoodMonth(
+            minimumAverageIncrease = Increase(properties.goodMonthMinimumAverageIncrease),
+            minimumMedianComparedToAverage = Percentage(properties.goodMonthMimumMedianComparedToAverage),
+            maximumNumberOfNegativeIncreases = properties.goodMonthMaximumNumberOfNegativeIncreases
+        )
 
-        return service.goodTickersFor(tickers, month)
+        return service.goodTickersFor(tickers, month, rules)
             .map { TickerDTO(it.symbol) }
     }
 }

@@ -1,9 +1,9 @@
 package com.myrran.stockator.infrastructure.repositories.alphavantagemonthlyseries
 
-import com.myrran.stockator.domain.Money
-import com.myrran.stockator.domain.MonthlyData
-import com.myrran.stockator.domain.Ticker
-import com.myrran.stockator.domain.TickerMonthlySeries
+import com.myrran.stockator.domain.misc.Money
+import com.myrran.stockator.domain.tickerseries.MonthlyData
+import com.myrran.stockator.domain.tickerseries.Ticker
+import com.myrran.stockator.domain.tickerseries.TickerMonthlySeries
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 

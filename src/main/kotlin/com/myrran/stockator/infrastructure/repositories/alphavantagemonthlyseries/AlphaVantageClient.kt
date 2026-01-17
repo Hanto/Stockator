@@ -1,6 +1,6 @@
 package com.myrran.stockator.infrastructure.repositories.alphavantagemonthlyseries
 
-import com.myrran.stockator.domain.Ticker
+import com.myrran.stockator.domain.tickerseries.Ticker
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.http.converter.HttpMessageConversionException

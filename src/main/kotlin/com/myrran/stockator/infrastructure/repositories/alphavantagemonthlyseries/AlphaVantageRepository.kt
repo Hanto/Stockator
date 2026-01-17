@@ -1,7 +1,7 @@
 package com.myrran.stockator.infrastructure.repositories.alphavantagemonthlyseries
 
-import com.myrran.stockator.domain.Ticker
-import com.myrran.stockator.domain.TickerMonthlySeries
+import com.myrran.stockator.domain.tickerseries.Ticker
+import com.myrran.stockator.domain.tickerseries.TickerMonthlySeries
 import com.myrran.stockator.infrastructure.threadpools.ThreadPoolsConfiguration
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Repository

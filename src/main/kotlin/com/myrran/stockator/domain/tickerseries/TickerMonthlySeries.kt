@@ -1,5 +1,9 @@
-package com.myrran.stockator.domain
+package com.myrran.stockator.domain.tickerseries
 
+import com.myrran.stockator.domain.misc.Increase
+import com.myrran.stockator.domain.misc.Year
+import com.myrran.stockator.domain.misc.average
+import com.myrran.stockator.domain.misc.median
 import java.time.LocalDate
 import java.time.Month
 
@@ -20,12 +24,12 @@ data class TickerMonthlySeries(
     fun lastDate(): LocalDate =
         monthlyData.maxOfOrNull { it.closingDay }!!
 
-    fun averageIncreaseOf(month: Month): Percentage =
-        byMonth[month]?.map { it.increase }?.average() ?: Percentage(0.0)
+    fun averageIncreaseOf(month: Month): Increase =
+        byMonth[month]?.map { it.increase }?.average() ?: Increase(0.0)
 
-    fun medianIncreaseOf(month: Month): Percentage =
-        byMonth[month]?.map { it.increase }?.median() ?: Percentage(0.0)
+    fun medianIncreaseOf(month: Month): Increase =
+        byMonth[month]?.map { it.increase }?.median() ?: Increase(0.0)
 
     fun numberOfNegativeIncreasesOn(month: Month): Int =
-        byMonth[month]?.map { it.increase}?.filterIsInstance<Percentage>()?.count { it.value < 0 } ?: 0
+        byMonth[month]?.map { it.increase}?.filterIsInstance<Increase>()?.count { it.value < 0 } ?: 0
 }
