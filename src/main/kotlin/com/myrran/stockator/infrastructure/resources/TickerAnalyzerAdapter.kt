@@ -3,7 +3,7 @@ package com.myrran.stockator.infrastructure.resources
 import com.myrran.stockator.domain.misc.Increase
 import com.myrran.stockator.domain.misc.IncreaseI
 import com.myrran.stockator.domain.misc.IncreaseNaN
-import com.myrran.stockator.domain.tickerhistory.MonthlyRates
+import com.myrran.stockator.domain.tickerhistory.MonthHistory
 import com.myrran.stockator.domain.tickerhistory.TickerHistory
 import com.myrran.stockator.domain.tickerhistory.TickerId
 import org.springframework.stereotype.Component
@@ -18,11 +18,11 @@ class TickerAnalyzerAdapter {
             ticker = domain.tickerId.symbol,
             firstDate = domain.firstDate(),
             lastDate = domain.lastDate(),
-            yearIncrease = domain.monthlyHistory.yearlyIncrease().mapKeys { it.key.value }.mapValues { it.value.value.roundTo2Decimals() },
+            yearIncrease = domain.history.yearlyIncrease().mapKeys { it.key.value }.mapValues { it.value.value.roundTo2Decimals() },
             averageIncreasesByMonth = Month.entries.associateWith { domain.averageIncreaseOf(it).value.roundTo2Decimals() },
             medianIncreasesByMonth = Month.entries.associateWith { domain.medianIncreaseOf(it).value.roundTo2Decimals() },
             numberOfNegativeIncreasesByMonth = Month.entries.associateWith { domain.numberOfNegativeIncreasesOn(it) },
-            monthlyData = domain.monthlyHistory.monthlyRates
+            monthlyData = domain.history.monthlyHistory
                 .map { fromDomain(it)}
                 .groupBy { it.closingDay.year }
                 .mapValues { entry -> entry.value.associateBy { it.closingDay.month.name } }
@@ -31,7 +31,7 @@ class TickerAnalyzerAdapter {
     fun toDomain(tickerSymbols: List<String>?): List<TickerId>? =
         tickerSymbols?.map { TickerId(it) }
 
-    private fun fromDomain(domain: MonthlyRates): MonthlyRatesDTO =
+    private fun fromDomain(domain: MonthHistory): MonthlyRatesDTO =
         MonthlyRatesDTO(
             openingPrice = domain.openingPrice.amount,
             closingPrice = domain.closingPrice.amount,

@@ -6,20 +6,20 @@ import java.time.Month
 
 data class TickerHistory(
     val tickerId: TickerId,
-    val monthlyHistory: MonthlyHistory
+    val history: History
 ){
     fun firstDate(): LocalDate =
-        monthlyHistory.firstDate()
+        history.firstDate()
 
     fun lastDate(): LocalDate =
-        monthlyHistory.lastDate()
+        history.lastDate()
 
     fun averageIncreaseOf(month: Month): Increase =
-        monthlyHistory.averageIncreaseOf(month)
+        history.averageIncreaseOf(month)
 
     fun medianIncreaseOf(month: Month): Increase =
-        monthlyHistory.medianIncreaseOf(month)
+        history.medianIncreaseOf(month)
 
     fun numberOfNegativeIncreasesOn(month: Month): Int =
-        monthlyHistory.numberOfNegativeIncreasesOn(month)
+        history.numberOfNegativeIncreasesOn(month)
 }

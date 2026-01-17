@@ -2,8 +2,8 @@ package com.myrran.stockator.infrastructure.repositories.alphavantagetickerhisto
 
 import com.myrran.stockator.domain.misc.Money
 import com.myrran.stockator.domain.misc.TimeRange
-import com.myrran.stockator.domain.tickerhistory.MonthlyHistory
-import com.myrran.stockator.domain.tickerhistory.MonthlyRates
+import com.myrran.stockator.domain.tickerhistory.History
+import com.myrran.stockator.domain.tickerhistory.MonthHistory
 import com.myrran.stockator.domain.tickerhistory.TickerHistory
 import com.myrran.stockator.domain.tickerhistory.TickerId
 import org.springframework.stereotype.Component
@@ -28,7 +28,7 @@ class AVTickerHistoryAdapter {
 
         return TickerHistory(
             tickerId = TickerId(entity.metadata.symbol),
-            monthlyHistory = MonthlyHistory(monthlyRates)
+            history = History(monthlyRates)
         )
     }
 
@@ -39,12 +39,12 @@ class AVTickerHistoryAdapter {
 
         MonthlyRatesRaw(
             closingDay = closingDate,
-            closingPrice = Money(entity.close.toDouble())
+            closingPrice = Money(entity.adjustedClose.toDouble())
         )
 
-    private fun toMonthlyRates(entity: MonthlyRatesRaw, mapByYearAndMonth: Map<Int, Map<Int, MonthlyRatesRaw>>): MonthlyRates =
+    private fun toMonthlyRates(entity: MonthlyRatesRaw, mapByYearAndMonth: Map<Int, Map<Int, MonthlyRatesRaw>>): MonthHistory =
 
-        MonthlyRates(
+        MonthHistory(
             openingPrice = mapByYearAndMonth.getPreviousMonthClosingPrice(entity.closingDay.previousMonth()),
             closingDay = entity.closingDay,
             closingPrice = entity.closingPrice

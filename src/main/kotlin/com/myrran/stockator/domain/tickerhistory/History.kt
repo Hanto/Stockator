@@ -1,7 +1,6 @@
 package com.myrran.stockator.domain.tickerhistory
 
 import com.myrran.stockator.domain.misc.Increase
-import com.myrran.stockator.domain.misc.Percentage
 import com.myrran.stockator.domain.misc.Year
 import com.myrran.stockator.domain.misc.average
 import com.myrran.stockator.domain.misc.median
@@ -9,41 +8,30 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import java.time.Month
 
-class MonthlyHistory(
-    val monthlyRates: List<MonthlyRates>
+class History(
+    val monthlyHistory: List<MonthHistory>
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
 
-    private val byYearAndMonth: Map<Year, Map<Month, MonthlyRates>> = monthlyRates
+    private val byYearAndMonth: Map<Year, YearHistory> = monthlyHistory
         .groupBy { Year(it.closingDay.year) }
-        .mapValues { entry -> entry.value.associateBy { it.closingDay.month } }
+        .mapValues { entry -> YearHistory(entry.value) }
 
-    private val byMonth: Map<Month, List<MonthlyRates>> = monthlyRates
+    private val byMonth: Map<Month, List<MonthHistory>> = monthlyHistory
         .groupBy { it.closingDay.month }
 
     // MAIN:
     //--------------------------------------------------------------------------------------------------------
 
     fun firstDate(): LocalDate =
-        monthlyRates.minOfOrNull { it.closingDay }!!
+        monthlyHistory.minOfOrNull { it.closingDay }!!
 
     fun lastDate(): LocalDate =
-        monthlyRates.maxOfOrNull { it.closingDay }!!
+        monthlyHistory.maxOfOrNull { it.closingDay }!!
 
     fun yearlyIncrease(): Map<Year, Increase> =
         byYearAndMonth
-            .mapValues { entry ->
-
-                entry.value.values
-                    .map { it.increase }
-                    .filterIsInstance<Increase>()
-                    .also { log.info("increases: ${it.map { it.value }}") }
-                    .map { it.toPercentage() }
-                    .also { log.info("percentages: ${it.map { it.value }}") }
-                    .fold(Percentage(1.0) ) { acc, next -> acc * next }
-                    .also { log.info("result: $it") }
-                    .toIncrease()
-            }
+            .mapValues { it.value.increase() as Increase }
 
     fun averageIncreaseOf(month: Month): Increase =
         byMonth[month]

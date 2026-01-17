@@ -39,7 +39,11 @@ data class AVMonthlyRatesEntity(
     val low: String,
     @JsonProperty(value = "4. close")
     val close: String,
-    @JsonProperty(value = "5. volume")
-    val volume: String
+    @JsonProperty(value = "5. adjusted close")
+    val adjustedClose: String,
+    @JsonProperty(value = "6. volume")
+    val volume: String,
+    @JsonProperty(value = "7. dividend amount")
+    val dividendAmount: String
 
 ): Serializable

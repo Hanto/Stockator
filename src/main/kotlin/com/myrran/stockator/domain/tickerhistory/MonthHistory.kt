@@ -4,7 +4,7 @@ import com.myrran.stockator.domain.misc.IncreaseI
 import com.myrran.stockator.domain.misc.Money
 import java.time.LocalDate
 
-class MonthlyRates(
+class MonthHistory(
     val openingPrice: Money,
     val closingPrice: Money,
     val closingDay: LocalDate
