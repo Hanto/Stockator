@@ -16,12 +16,12 @@ class AVClientTest {
             properties = AVClientProperties(
                 url = "https://www.alphavantage.co/query",
                 apiKey = "demo",
-                monthlyFunction = "TIME_SERIES_MONTHLY"
+                monthlyFunction = "TIME_SERIES_MONTHLY_ADJUSTED"
             )
         )
 
         val tickerId = TickerId("IBM")
-        val result = client.findBy(tickerId)
+        val result = client.findBy2(tickerId)
 
         println(result)
     }

@@ -17,13 +17,13 @@ class AVTickerHistoryAdapter {
 
         val monthlyRatesRaw = entity.monthlyHistory.entries
             .map { toMonthlyDataRaw(toLocalDate(it.key), it.value) }
-            .filter { it.closingDay.hasLessThan(timeRange.amount, timeRange.unit) }
 
         val mapByYearAndMonth = monthlyRatesRaw
             .groupBy { it.closingDay.year }
             .mapValues { entry -> entry.value.associateBy { it.closingDay.monthValue } }
 
         val monthlyRates = monthlyRatesRaw
+            .filter { it.closingDay.hasLessThan(timeRange.amount, timeRange.unit) }
             .map { toMonthlyRates(it, mapByYearAndMonth) }
 
         return TickerHistory(

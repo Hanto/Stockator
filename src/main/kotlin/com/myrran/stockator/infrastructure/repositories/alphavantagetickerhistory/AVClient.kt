@@ -43,4 +43,28 @@ class AVClient(
                 else -> throw e
             }
         }
+
+    fun findBy2(tickerId: TickerId): String? =
+
+        try {
+
+            val url = """
+                ${properties.url}
+                ?function=${properties.monthlyFunction}
+                &symbol={symbol}
+                &apikey=${properties.apiKey}
+            
+            """.trimIndent().replace("\n", "")
+
+            restTemplate.getForObject<String>(url, tickerId.symbol)
+                .also { log.info("Fetched history for: {}", tickerId.symbol) }
+        }
+        catch (e: RestClientException) {
+
+            when (e.cause) {
+
+                is HttpMessageNotReadableException, is HttpMessageConversionException -> null.also { log.warn("History not readable for {}", tickerId.symbol) }
+                else -> throw e
+            }
+        }
 }
