@@ -14,7 +14,6 @@ class TickerAnalyzerService(
     val repository: TickerHistoryRepository
 
 ) {
-
     private val log = LoggerFactory.getLogger(this::class.java)
 
     fun getHistory(tickerId: TickerId, historyTimeRange: TimeRange): TickerHistory? =

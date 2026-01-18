@@ -25,4 +25,21 @@ class AVClientTest {
 
         println(result)
     }
+
+    @Test
+    fun testFindAllTickers() {
+
+        val client = AVClient(
+            restTemplate = RestTemplate(),
+            properties = AVClientProperties(
+                url = "https://www.alphavantage.co/query",
+                apiKey = "YM0ZN5MZ9TM97C3I",
+                monthlyFunction = "TIME_SERIES_MONTHLY_ADJUSTED"
+            )
+        )
+
+        val result = client.findAllTickers()
+
+        println(result?.size)
+    }
 }

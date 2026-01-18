@@ -2,6 +2,7 @@ package com.myrran.stockator.infrastructure.resources
 
 import com.myrran.stockator.application.TickerAnalyzerService
 import com.myrran.stockator.domain.tickerhistory.TickerId
+import com.myrran.stockator.infrastructure.repositories.alphavantageticker.TickerStatusRepository
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
@@ -12,7 +13,9 @@ import java.time.Month
 class TickerAnalyzerResource(
     val service: TickerAnalyzerService,
     val adapter: TickerAnalyzerAdapter,
-    val properties: TickerAnalyzerProperties
+    val properties: TickerAnalyzerProperties,
+
+    val repository: TickerStatusRepository
 ) {
 
     @GetMapping("api/monthlySeries/{tickerSymbol}")
@@ -64,5 +67,11 @@ class TickerAnalyzerResource(
 
         return service.goodTickersFor(tickers, timeRange, rules)
             .map { it.symbol }
+    }
+
+    @GetMapping("/api/tickerStatus")
+    fun getTickerStatus() {
+
+        repository.findAll()
     }
 }

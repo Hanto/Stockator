@@ -12,7 +12,7 @@ class MonthHistory(
     val increase: Increase = (closingPrice / openingPrice).toIncrease()
 
     init {
-        require(!openingPrice.isZero()) { "Opening price cannot be zero or negative: $openingPrice" }
-        require(!closingPrice.isZero()) { "Closing price cannot be zero or negative: $closingPrice" }
+        require(!openingPrice.isZero()) { "Opening price cannot be zero or negative for closingDay: $closingDay" }
+        require(!closingPrice.isZero()) { "Closing price cannot be zero or negative for closingDay: $closingDay" }
     }
 }

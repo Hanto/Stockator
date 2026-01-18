@@ -1,6 +1,7 @@
 package com.myrran.stockator.infrastructure.repositories.alphavantagetickerhistory
 
 import com.myrran.stockator.domain.tickerhistory.TickerId
+import com.myrran.stockator.infrastructure.repositories.alphavantageticker.TickerStatusEntity
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.http.converter.HttpMessageConversionException
@@ -46,6 +47,35 @@ class AVClient(
                 else -> throw e
             }
         }
+
+    @Cacheable(cacheManager = "mapDBCacheManager", cacheNames = ["tickerStatus"], key = "allTickers")
+    fun findAllTickers(): List<TickerStatusEntity> {
+
+        val url = """
+                ${properties.url}
+                ?function=LISTING_STATUS
+                &apikey=${properties.apiKey}
+            
+            """.trimIndent().replace("\n", "")
+
+        return restTemplate.getForObject<String>(url)!!
+            .also{ log.info("Fetched all tickers listing status") }
+            .lines()
+            .drop(1)
+            .map { it.split(",") }
+            .filter { it.size >= 7 }
+            .map { TickerStatusEntity(
+                symbol = it[0],
+                name = it[1],
+                exchange = it[2],
+                assetType = it[3],
+                ipoDate = it[4],
+                delistingDate = it[5],
+                status = it[6]) }
+    }
+
+    // DEBUG STUFF:
+    //--------------------------------------------------------------------------------------------------------
 
     fun findBy2(tickerId: TickerId): String? =
 
