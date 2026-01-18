@@ -21,6 +21,9 @@ class AVClient(
 {
     private val log = LoggerFactory.getLogger(this.javaClass)
 
+    // MAIN:
+    //--------------------------------------------------------------------------------------------------------
+
     @Cacheable(cacheManager = "mapDBCacheManager", cacheNames = ["tickerMonthlySeries"], key = "#tickerId.symbol")
     fun findBy(tickerId: TickerId): AVTickerHistoryEntity? =
 

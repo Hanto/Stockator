@@ -20,17 +20,19 @@ class AVTickerHistoryRepository(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    override fun findBy(tickerId: TickerId, timeRange: TimeRange): TickerHistory? = runCatching {
+    override fun findBy(tickerId: TickerId, timeRange: TimeRange): TickerHistory? =
 
-        client.findBy(tickerId)
-            ?.let { adapter.toDomain(it, timeRange) }
+        runCatching {
 
-    }.getOrElse {
+            client.findBy(tickerId)
+                ?.let { adapter.toDomain(it, timeRange) }
 
-        log.error("Error retrieving history for {}", tickerId.symbol, it)
-        null
-    }
-    
+        }.getOrElse {
+
+            log.error("Error retrieving history for {}", tickerId.symbol, it)
+            null
+        }
+
     @Async(value = ThreadPoolsConfiguration.ALPHA_VANTAGE_THREAD_POLL)
     override fun findByAsync(tickerId: TickerId, timeRange: TimeRange): CompletableFuture<TickerHistory?> =
 
