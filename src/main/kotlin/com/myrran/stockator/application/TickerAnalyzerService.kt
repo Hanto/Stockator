@@ -26,7 +26,7 @@ class TickerAnalyzerService(
         tickerIds
             .map { repository.findByAsync(it, historyTimeRange) }
             .mapNotNull { it.get() }
-            .also { log.info("Looking into ${it.size} tickers: ${it.toSymbols()}") }
+            .also { log.info("Looking into ${it.size}") }
             .filter { it.satisfiesRulesThatMonth(rules, month) }
             .also { log.info("${it.size} tickers found") }
             .map { it.tickerId }
@@ -36,7 +36,7 @@ class TickerAnalyzerService(
         tickerId
             .map { repository.findByAsync(it, historyTimeRange) }
             .mapNotNull { it.get() }
-            .also { log.info("Looking into ${it.size} tickers: ${it.toSymbols()}") }
+            .also { log.info("Looking into ${it.size}") }
             .filter { it.satisfiesRulesAnyMonth(rules) }
             .also { log.info("${it.size} tickers found") }
             .map { it.tickerId }
