@@ -10,12 +10,14 @@ import java.time.Month
 class History(
     val monthlyHistory: List<MonthHistory>
 ) {
-    private val byYearAndMonth: Map<Year, YearHistory> = monthlyHistory
-        .groupBy { Year(it.closingDay.year) }
-        .mapValues { entry -> YearHistory(entry.value) }
+    private val byYearAndMonth: Map<Year, YearHistory> =
+        monthlyHistory
+            .groupBy { Year(it.closingDay.year) }
+            .mapValues { entry -> YearHistory(entry.value) }
 
-    private val byMonth: Map<Month, List<MonthHistory>> = monthlyHistory
-        .groupBy { it.closingDay.month }
+    private val byMonth: Map<Month, List<MonthHistory>> =
+        monthlyHistory
+            .groupBy { it.closingDay.month }
 
     // MAIN:
     //--------------------------------------------------------------------------------------------------------

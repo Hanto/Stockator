@@ -9,7 +9,8 @@ class YearHistory(
     private val monthlyHistory: List<MonthHistory>
 )
 {
-    private val byMonth: Map<Month, MonthHistory> = monthlyHistory.associateBy { it.closingDay.month }
+    private val byMonth: Map<Month, MonthHistory> =
+        monthlyHistory.associateBy { it.closingDay.month }
 
     fun firstDate(): LocalDate =
         monthlyHistory.minOfOrNull { it.closingDay }!!
@@ -23,5 +24,5 @@ class YearHistory(
     fun closingPrice(): Money =
         byMonth[lastDate().month]!!.closingPrice
 
-    fun increase(): Increase =(closingPrice() / openingPrice()).toIncrease()
+    fun increase(): Increase = (closingPrice() / openingPrice()).toIncrease()
 }

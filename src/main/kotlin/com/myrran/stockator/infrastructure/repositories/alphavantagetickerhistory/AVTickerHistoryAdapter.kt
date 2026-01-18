@@ -45,10 +45,13 @@ class AVTickerHistoryAdapter {
     private fun toMonthlyRates(entity: MonthlyRatesRaw, mapByYearAndMonth: Map<Int, Map<Int, MonthlyRatesRaw>>): MonthHistory =
 
         MonthHistory(
-            openingPrice = mapByYearAndMonth.getPreviousMonthClosingPrice(entity.closingDay.previousMonth()),
+            openingPrice = retrieveOpeningPriceFromLastMonthClosingPrice(entity.closingDay, mapByYearAndMonth) ?: entity.closingPrice,
             closingDay = entity.closingDay,
             closingPrice = entity.closingPrice
         )
+
+    private fun retrieveOpeningPriceFromLastMonthClosingPrice(closingDay: LocalDate, map: Map<Int, Map<Int, MonthlyRatesRaw>>): Money? =
+        map.getPreviousMonthClosingPrice(closingDay.previousMonth())
 
     private fun toLocalDate(dateString: String): LocalDate =
 
@@ -58,9 +61,9 @@ class AVTickerHistoryAdapter {
 
         this.minusMonths(1)
 
-    private fun Map<Int, Map<Int, MonthlyRatesRaw>>.getPreviousMonthClosingPrice(date: LocalDate): Money =
+    private fun Map<Int, Map<Int, MonthlyRatesRaw>>.getPreviousMonthClosingPrice(date: LocalDate): Money? =
 
-        this[date.year]?.get(date.monthValue)?.closingPrice ?: Money(0.0)
+        this[date.year]?.get(date.monthValue)?.closingPrice
 
     fun LocalDate.hasLessThan(amount: Long, unit: ChronoUnit): Boolean =
         LocalDate.now().minus(amount, unit) < this

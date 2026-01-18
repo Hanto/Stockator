@@ -16,7 +16,7 @@ class ThreadPoolsConfiguration {
     fun riskApiThreadPool(): ThreadPoolTaskExecutor =
 
         ThreadPoolTaskExecutor().apply {
-            corePoolSize = 20
+            corePoolSize = 1
             setWaitForTasksToCompleteOnShutdown(true)
             setThreadNamePrefix("API-AV-")
         }

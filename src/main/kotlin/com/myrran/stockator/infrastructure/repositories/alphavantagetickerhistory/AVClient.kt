@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestOperations
 import org.springframework.web.client.getForObject
+import java.net.URLEncoder
 
 @Repository
 class AVClient(
@@ -32,7 +33,9 @@ class AVClient(
             
             """.trimIndent().replace("\n", "")
 
-            restTemplate.getForObject<AVTickerHistoryEntity>(url, tickerId.symbol)
+            val encodedSymbol = URLEncoder.encode(tickerId.symbol, "UTF-8")
+
+            restTemplate.getForObject<AVTickerHistoryEntity>(url, encodedSymbol)
                 .also { log.info("Fetched history for: {}", tickerId.symbol) }
         }
         catch (e: RestClientException) {
