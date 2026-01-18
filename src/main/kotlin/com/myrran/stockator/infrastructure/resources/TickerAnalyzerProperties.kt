@@ -7,12 +7,15 @@ import com.myrran.stockator.domain.rules.RulesForAGoodMonth
 import com.myrran.stockator.domain.tickerhistory.TickerId
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.io.Resource
+import java.nio.file.Files
+import java.nio.file.Path
 
 @Configuration
 class TickerAnalyzerProperties(
 
-    @Value($$"#{'${default.tickers}'.split(',')}")
-    val defaultTickers: List<String>,
+    @Value($$"${default.tickers.listsource}")
+    val defaultTickersList: Resource,
 
     @Value($$"${default.tickers.historicalTimeRange.amount}")
     val defaultHistoricalTimeRangeAmount: Long,
@@ -38,9 +41,6 @@ class TickerAnalyzerProperties(
             unit = java.time.temporal.ChronoUnit.valueOf(defaultHistoricalTimeRangeUnit)
         )
 
-    fun defaultTickers(): List<TickerId> =
-        defaultTickers.map { TickerId(it) }
-
     fun defaultRulesForAGoodMonth() =
         RulesForAGoodMonth(
             minimumYearsOfHistory = defaultMinimumYearsOfHistory,
@@ -48,4 +48,9 @@ class TickerAnalyzerProperties(
             minimumMedianComparedToAverage = Percentage(defaultGoodMonthMimumMedianComparedToAverage),
             maximumNumberOfNegativeIncreases = defaultGoodMonthMaximumNumberOfNegativeIncreases
         )
+
+    fun defaultTickers(): List<TickerId> =
+         Files.readString(Path.of(defaultTickersList.uri))
+             .split(",")
+             .map { TickerId(it) }
 }

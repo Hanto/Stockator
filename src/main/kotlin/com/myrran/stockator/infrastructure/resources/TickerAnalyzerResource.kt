@@ -43,26 +43,26 @@ class TickerAnalyzerResource(
     fun analyze(
         @PathVariable month: Month,
         @RequestParam tickerSymbols: List<String>?
-    ): List<TickerDTO> {
+    ): List<String> {
 
         val tickers = adapter.toDomain(tickerSymbols) ?: properties.defaultTickers()
         val timeRange = properties.defaultTimeRange()
         val rules = properties.defaultRulesForAGoodMonth()
 
         return service.goodTickersFor(tickers, timeRange, rules, month)
-            .map { TickerDTO(it.symbol) }
+            .map { it.symbol }
     }
 
     @GetMapping("/api/goodTickers/")
     fun analyze(
         @RequestParam tickerSymbols: List<String>?
-    ): List<TickerDTO> {
+    ): List<String> {
 
         val tickers = adapter.toDomain(tickerSymbols) ?: properties.defaultTickers()
         val timeRange = properties.defaultTimeRange()
         val rules = properties.defaultRulesForAGoodMonth()
 
         return service.goodTickersFor(tickers, timeRange, rules)
-            .map { TickerDTO(it.symbol) }
+            .map { it.symbol }
     }
 }
