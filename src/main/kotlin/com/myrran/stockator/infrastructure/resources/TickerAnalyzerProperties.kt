@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.Resource
 import java.nio.file.Files
 import java.nio.file.Path
+import java.time.temporal.ChronoUnit
 
 @Configuration
 class TickerAnalyzerProperties(
@@ -38,7 +39,7 @@ class TickerAnalyzerProperties(
     fun defaultTimeRange(): TimeRange =
         TimeRange(
             amount = defaultHistoricalTimeRangeAmount,
-            unit = java.time.temporal.ChronoUnit.valueOf(defaultHistoricalTimeRangeUnit)
+            unit = ChronoUnit.valueOf(defaultHistoricalTimeRangeUnit)
         )
 
     fun defaultRulesForAGoodMonth() =

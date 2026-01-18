@@ -48,7 +48,7 @@ class AVClient(
             }
         }
 
-    @Cacheable(cacheManager = "mapDBCacheManager", cacheNames = ["tickerStatus"], key = "allTickers")
+    @Cacheable(cacheManager = "mapDBCacheManager", cacheNames = ["tickerStatus"])
     fun findAllTickers(): List<TickerStatusEntity> {
 
         val url = """

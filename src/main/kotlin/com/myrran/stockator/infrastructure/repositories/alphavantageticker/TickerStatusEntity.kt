@@ -1,5 +1,7 @@
 package com.myrran.stockator.infrastructure.repositories.alphavantageticker
 
+import java.io.Serializable
+
 data class TickerStatusEntity(
 
     val symbol: String,
@@ -9,4 +11,5 @@ data class TickerStatusEntity(
     val ipoDate: String,
     val delistingDate: String?,
     val status: String
-)
+
+): Serializable
